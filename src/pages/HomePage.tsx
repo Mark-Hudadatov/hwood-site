@@ -115,7 +115,7 @@ const AboutHWOOD: React.FC = () => {
           </h2>
           
           <p className="text-gray-900 text-xl md:text-2xl font-light leading-relaxed mb-12 max-w-2xl">
-            We are an international company, manufacturing lines, machines and components for transforming materials into products
+            We are modern production powerhouse delivering modular cabinet systems, CNC processing, and premium furniture fronts for residential and commercial projects.
           </p>
           
           <button className="bg-[#005f5f] text-white px-8 py-3.5 rounded-md font-semibold hover:bg-[#004d4d] transition-colors inline-block text-sm tracking-wide">
@@ -272,14 +272,14 @@ export const HomePage: React.FC = () => {
           <div className="absolute left-[28rem] -top-40 h-[200%] w-12 bg-[#004D4D] transform -skew-x-[20deg] opacity-20" />
         </div>
 
-        {/* 3. What's Next */}
+        {/* 3. Recent Projects and News */}
         <section className="relative z-10 w-full text-white py-16 md:py-20 lg:py-24">
           <div className="w-full px-8 md:px-12 lg:px-16 flex flex-col">
             
             {/* Header Section */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 md:mb-16 gap-6">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                What's Next
+                Recent Projects and News
               </h1>
 
               <div className="flex gap-4">
@@ -295,7 +295,7 @@ export const HomePage: React.FC = () => {
                 >
                   <Sparkles className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
                   <span className="text-sm font-medium">
-                    {isGenerating ? 'Dreaming...' : 'See more'}
+                    {isGenerating ? 'HWOOD' : 'See more'}
                   </span>
                 </button>
 
