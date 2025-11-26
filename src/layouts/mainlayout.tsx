@@ -1,8 +1,8 @@
 /**
- * MAIN LAYOUT
- * ===========
+ * MAIN LAYOUT - HWOOD
+ * ===================
  * Shared layout wrapper for all public pages.
- * Includes Header, main content area (Outlet), and Footer with shared background.
+ * Includes Header with navigation, main content area (Outlet), and Footer.
  */
 
 import React, { useState, useEffect } from 'react';
@@ -16,7 +16,7 @@ import { getNavigationData, getCompanyInfo } from '../services/data/dataService'
 // =============================================================================
 
 const Header: React.FC = () => {
- const navigate = useNavigate();
+  const navigate = useNavigate();
   const [navData, setNavData] = useState<{ services: (Service & { subservices: Subservice[] })[] }>({ services: [] });
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -41,6 +41,7 @@ const Header: React.FC = () => {
     setActiveDropdown(null);
     setMobileMenuOpen(false);
   };
+
   return (
     <header className="flex flex-col w-full bg-[#EAEAEA] relative z-20 shadow-sm font-sans">
       {/* Top Utility Bar */}
@@ -118,8 +119,11 @@ const Header: React.FC = () => {
           ))}
         </div>
 
-        {/* Right Icons */}
-        <div className="flex items-center gap-4">
+        {/* Right Section */}
+        <div className="flex items-center gap-3">
+        
+          {/* Icons */}
+          <div className="flex items-center gap-4">
           <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm">
             <MapPin className="w-5 h-5" />
           </button>
@@ -130,16 +134,18 @@ const Header: React.FC = () => {
             <User className="w-5 h-5" />
           </button>
         </div>
-        {/* Mobile Menu Button */}
+
+          {/* Mobile Menu Button */}
           <button 
             className="lg:hidden w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
+        </div>
       </nav>
 
-    {/* Mobile Menu */}
+      {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
           <div className="px-6 py-4 space-y-4">
@@ -171,7 +177,7 @@ const Header: React.FC = () => {
     </header>
   );
 };
-      
+
 // =============================================================================
 // FOOTER COMPONENT
 // =============================================================================
