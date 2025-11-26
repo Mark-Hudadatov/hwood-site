@@ -5,9 +5,11 @@
  * Includes Header, main content area (Outlet), and Footer with shared background.
  */
 
-import React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { MapPin, Search, User, ChevronDown, Globe, Facebook, Instagram, Linkedin, Youtube, MessageCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Outlet, useNavigate, Link } from 'react-router-dom';
+import { MapPin, Search, User, ChevronDown, Globe, Facebook, Instagram, Linkedin, Youtube, MessageCircle, Menu, X } from 'lucide-react';
+import { Service, Subservice } from '../domain/types';
+import { getNavigationData, getCompanyInfo } from '../services/data/dataService';
 
 // =============================================================================
 // HEADER COMPONENT
@@ -15,14 +17,38 @@ import { MapPin, Search, User, ChevronDown, Globe, Facebook, Instagram, Linkedin
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const [navData, setNavData] = useState<{ services: (Service & { subservices: Subservice[] })[] }>({ services: [] });
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const companyInfo = getCompanyInfo();
+
+  useEffect(() => {
+    const loadNav = async () => {
+      const data = await getNavigationData();
+      setNavData(data);
+    };
+    loadNav();
+  }, []);
+
+  const handleServiceClick = (slug: string) => {
+    navigate(`/services/${slug}`);
+    setActiveDropdown(null);
+    setMobileMenuOpen(false);
+  };
+
+  const handleSubserviceClick = (slug: string) => {
+    navigate(`/subservices/${slug}`);
+    setActiveDropdown(null);
+    setMobileMenuOpen(false);
+  };
 
   return (
     <header className="flex flex-col w-full bg-[#EAEAEA] relative z-20 shadow-sm font-sans">
       {/* Top Utility Bar */}
       <div className="hidden md:flex justify-end items-center px-8 md:px-12 py-2 gap-6 text-[11px] font-bold text-gray-800 tracking-wide">
-        <a href="#" className="hover:text-teal-700 transition-colors">Company</a>
-        <a href="#" className="hover:text-teal-700 transition-colors">News</a>
-        <a href="#" className="hover:text-teal-700 transition-colors">Contacts</a>
+        <Link to="/about" className="hover:text-teal-700 transition-colors">Company</Link>
+        <Link to="/portfolio" className="hover:text-teal-700 transition-colors">News</Link>
+        <Link to="/contact" className="hover:text-teal-700 transition-colors">Contacts</Link>
         
         <button className="flex items-center gap-1 border border-gray-400 rounded-full px-3 py-1 hover:bg-white hover:border-transparent transition-all">
           <Globe className="w-3 h-3" />
