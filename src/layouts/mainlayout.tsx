@@ -46,13 +46,19 @@ const Header: React.FC = () => {
     <header className="flex flex-col w-full bg-[#EAEAEA] relative z-20 shadow-sm font-sans">
       {/* Top Utility Bar */}
       <div className="hidden md:flex justify-end items-center px-8 md:px-12 py-2 gap-6 text-[11px] font-bold text-gray-800 tracking-wide">
-        <Link to="/about" className="hover:text-teal-700 transition-colors">Company</Link>
-        <Link to="/portfolio" className="hover:text-teal-700 transition-colors">News</Link>
-        <Link to="/contact" className="hover:text-teal-700 transition-colors">Contacts</Link>
+        <Link to="/about" className="hover:text-teal-700 transition-colors">
+          Company
+        </Link>
+        <Link to="/portfolio" className="hover:text-teal-700 transition-colors">
+          Projects & News
+        </Link>
+        <Link to="/contact" className="hover:text-teal-700 transition-colors">
+          Contact
+        </Link>
         
         <button className="flex items-center gap-1 border border-gray-400 rounded-full px-3 py-1 hover:bg-white hover:border-transparent transition-all">
           <Globe className="w-3 h-3" />
-          <span>HEB</span>
+          <span>EN</span>
         </button>
       </div>
 
@@ -121,19 +127,21 @@ const Header: React.FC = () => {
 
         {/* Right Section */}
         <div className="flex items-center gap-3">
-        
+          {/* Quote Button - Desktop */}
+
+
           {/* Icons */}
-          <div className="flex items-center gap-4">
-          <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm">
+          <div className="hidden md:flex items-center gap-4">
+            <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm">
             <MapPin className="w-5 h-5" />
-          </button>
-          <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm">
-            <Search className="w-5 h-5" />
-          </button>
-          <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm">
-            <User className="w-5 h-5" />
-          </button>
-        </div>
+            </button>
+            <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm">
+              <Search className="w-5 h-5" />
+            </button>
+            <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm">
+              <User className="w-5 h-5" />
+            </button>
+          </div>
 
           {/* Mobile Menu Button */}
           <button 
@@ -248,6 +256,7 @@ const Footer: React.FC = () => {
   );
 };
 
+
 // =============================================================================
 // SIDE MENU COMPONENT
 // =============================================================================
@@ -289,6 +298,7 @@ const FooterWrapper: React.FC = () => {
     </div>
   );
 };
+
 
 // =============================================================================
 // MAIN LAYOUT EXPORT
