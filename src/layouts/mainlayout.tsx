@@ -74,16 +74,52 @@ const Header: React.FC = () => {
         </div>
 
         {/* Center Links */}
-        <div className="hidden lg:flex items-center gap-8 text-base font-semibold text-black">
-          <button className="flex items-center gap-1 hover:text-teal-700 transition-colors">
-            Modular & Cabinet Systems <ChevronDown className="w-4 h-4" />
-          </button>
-          <button className="flex items-center gap-1 hover:text-teal-700 transition-colors">
-            CNC Board Processing <ChevronDown className="w-4 h-4" />
-          </button>
-          <button className="flex items-center gap-1 hover:text-teal-700 transition-colors">
-            Furniture Fronts Production <ChevronDown className="w-4 h-4" />
-          </button>
+        <div className="hidden lg:flex items-center gap-2">
+          {navData.services.map((service) => (
+            <div 
+              key={service.id}
+              className="relative"
+              onMouseEnter={() => setActiveDropdown(service.id)}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <button 
+                onClick={() => handleServiceClick(service.slug)}
+                className="flex items-center gap-1 px-4 py-2 text-base font-semibold text-black hover:text-teal-700 transition-colors rounded-lg hover:bg-white/50"
+              >
+                {service.title}
+                <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === service.id ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {/* Dropdown */}
+              {activeDropdown === service.id && service.subservices.length > 0 && (
+                <div className="absolute top-full left-0 mt-1 bg-white rounded-xl shadow-xl border border-gray-100 py-2 min-w-[280px] z-50">
+                  <div className="px-4 py-2 border-b border-gray-100">
+                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">
+                      {service.title}
+                    </span>
+                  </div>
+                  {service.subservices.map((sub) => (
+                    <button
+                      key={sub.id}
+                      onClick={() => handleSubserviceClick(sub.slug)}
+                      className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors"
+                    >
+                      <span className="font-medium text-gray-900">{sub.title}</span>
+                      <p className="text-sm text-gray-500 mt-0.5 line-clamp-1">{sub.description}</p>
+                    </button>
+                  ))}
+                  <div className="px-4 py-2 border-t border-gray-100 mt-1">
+                    <button 
+                      onClick={() => handleServiceClick(service.slug)}
+                      className="text-sm font-semibold text-[#005f5f] hover:underline"
+                    >
+                      View all {service.title} →
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
 
         {/* Right Icons */}
