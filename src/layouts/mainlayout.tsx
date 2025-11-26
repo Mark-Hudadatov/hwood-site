@@ -178,7 +178,18 @@ const Header: React.FC = () => {
                 </div>
               </div>
             ))}
-
+            <div className="pt-4 border-t border-gray-200 space-y-3">
+              <Link to="/about" className="block text-gray-700 font-medium" onClick={() => setMobileMenuOpen(false)}>About</Link>
+              <Link to="/portfolio" className="block text-gray-700 font-medium" onClick={() => setMobileMenuOpen(false)}>Projects</Link>
+              <Link to="/contact" className="block text-gray-700 font-medium" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+              <Link 
+                to="/quote" 
+                className="block w-full text-center bg-[#005f5f] text-white py-3 rounded-lg font-semibold"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Get Quote
+              </Link>
+            </div>
           </div>
         </div>
       )}
@@ -192,7 +203,7 @@ const Header: React.FC = () => {
 
 const Footer: React.FC = () => {
   const companyInfo = getCompanyInfo();
-      
+
   return (
     <footer className="w-full px-8 md:px-12 lg:px-16 pt-16 pb-8 text-white relative z-10">
       {/* Top Row: Logo & Socials */}
@@ -202,44 +213,73 @@ const Footer: React.FC = () => {
           <div className="w-10 h-10 flex items-center justify-center bg-white rounded-lg">
             <span className="text-[#005f5f] font-bold text-xl">H</span>
           </div>
-          <span className="text-3xl font-bold tracking-tight">{companyInfo.name}</span>
+          <div>
+            <span className="text-3xl font-bold tracking-tight">{companyInfo.name}</span>
             <p className="text-sm text-gray-400">{companyInfo.tagline}</p>
+          </div>
         </div>
 
         {/* Social Icons */}
         <div className="flex gap-4">
           {[Facebook, Instagram, Linkedin, Youtube].map((Icon, idx) => (
-            <a key={idx} href="#" className="w-10 h-10 rounded-full border border-white flex items-center justify-center hover:bg-white hover:text-black transition-colors">
+            <a key={idx} href="#" className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center hover:bg-white hover:text-[#005f5f] transition-colors">
               <Icon className="w-5 h-5" />
             </a>
           ))}
         </div>
       </div>
 
-      {/* Middle Row: Two Columns */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 mb-24">
+      {/* Middle Row: Links & Contact */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        {/* Services */}
+        <div>
+          <h3 className="text-lg font-bold mb-4">Services</h3>
+          <div className="w-12 h-px bg-[#005f5f] mb-4" />
+          <ul className="space-y-2 text-sm text-gray-300">
+            <li><Link to="/services/modular-cabinet-systems" className="hover:text-white transition-colors">Modular & Cabinet Systems</Link></li>
+            <li><Link to="/services/cnc-board-processing" className="hover:text-white transition-colors">CNC Board Processing</Link></li>
+            <li><Link to="/services/furniture-fronts-production" className="hover:text-white transition-colors">Furniture Fronts</Link></li>
+          </ul>
+        </div>
+
+        {/* Company */}
+        <div>
+          <h3 className="text-lg font-bold mb-4">Company</h3>
+          <div className="w-12 h-px bg-[#005f5f] mb-4" />
+          <ul className="space-y-2 text-sm text-gray-300">
+            <li><Link to="/about" className="hover:text-white transition-colors">About HWOOD</Link></li>
+            <li><Link to="/portfolio" className="hover:text-white transition-colors">Projects</Link></li>
+            <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+          </ul>
+        </div>
+
         {/* Stay up to date */}
         <div>
-          <h3 className="text-lg font-bold mb-4">Stay up to date</h3>
-          <div className="w-full h-px bg-gray-600 mb-6" />
-          <p className="mb-8 text-sm text-gray-300 leading-relaxed max-w-md">
-            Subscribe to our newsletter and stay up to date with news from HWOOD.
+          <h3 className="text-lg font-bold mb-4">Stay Updated</h3>
+          <div className="w-12 h-px bg-[#005f5f] mb-4" />
+          <p className="text-sm text-gray-300 leading-relaxed mb-4">
+            Subscribe to our newsletter for updates on new projects and services.
           </p>
-          <button className="bg-white text-[#002828] px-8 py-3 rounded font-bold hover:bg-gray-200 transition-colors">
+          <button className="bg-white text-[#002828] px-6 py-2 rounded font-bold hover:bg-gray-200 transition-colors text-sm">
             Subscribe
           </button>
         </div>
 
-        {/* Need help? */}
+        {/* Contact */}
         <div>
-          <h3 className="text-lg font-bold mb-4">Need help?</h3>
-          <div className="w-full h-px bg-[#005f5f] mb-6" />
-          <p className="mb-8 text-sm text-gray-300 leading-relaxed max-w-md">
-            We provide after-sales service with a view to supporting the efficiency and productivity of our solutions.
-          </p>
-          <button className="bg-[#005f5f] text-white px-8 py-3 rounded font-bold hover:bg-[#004d4d] transition-colors">
-            Request support
-          </button>
+          <h3 className="text-lg font-bold mb-4">Contact</h3>
+          <div className="w-12 h-px bg-[#005f5f] mb-4" />
+          <div className="space-y-2 text-sm text-gray-300">
+            <p>{companyInfo.email}</p>
+            <p>{companyInfo.phone}</p>
+            <p>{companyInfo.address}</p>
+          </div>
+          <Link 
+            to="/quote"
+            className="inline-block mt-4 bg-[#005f5f] text-white px-6 py-2 rounded font-bold hover:bg-[#004d4d] transition-colors text-sm"
+          >
+            Get Quote
+          </Link>
         </div>
       </div>
 
@@ -255,7 +295,6 @@ const Footer: React.FC = () => {
     </footer>
   );
 };
-
 
 // =============================================================================
 // SIDE MENU COMPONENT
