@@ -227,7 +227,9 @@ const AboutHWOOD: React.FC = () => {
           </p>
           
           <button className="bg-[#005f5f] text-white px-8 py-3.5 rounded-md font-semibold hover:bg-[#004d4d] transition-colors inline-block text-sm tracking-wide">
+            <Link> to="/about"
             Discover HWOOD
+            </Link>
           </button>
         </div>
       </div>
@@ -408,13 +410,15 @@ export const HomePage: React.FC = () => {
                 >
                   <Sparkles className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
                   <span className="text-sm font-medium">
-                    {isGenerating ? 'HWOOD' : 'See more'}
+                    {isGenerating ? 'HWOOD' : 'Generate'}
                   </span>
                 </button>
 
                 {/* See all Button */}
                 <button className="px-8 py-2 rounded-lg border border-white text-white hover:bg-white hover:text-[#005f5f] transition-colors duration-300 text-sm font-medium">
+                  <Link> to="/portfolio"
                   See all
+                  </Link>
                 </button>
               </div>
             </div>
