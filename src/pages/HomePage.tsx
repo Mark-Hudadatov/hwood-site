@@ -120,8 +120,9 @@ const AboutHWOOD: React.FC = () => {
           </p>
           
           <button className="bg-[#005f5f] text-white px-8 py-3.5 rounded-md font-semibold hover:bg-[#004d4d] transition-colors inline-block text-sm tracking-wide">
-            <Link to="/about" className="hover:text-teal-700 transition-colors"> </Link>
+            <Link to="/about" className="hover:text-teal-700 transition-colors"> 
             Discover HWOOD
+            </Link>
           </button>
         </div>
       </div>
