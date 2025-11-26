@@ -125,7 +125,9 @@ const Header: React.FC = () => {
         {/* Right Icons */}
         <div className="flex items-center gap-4">
           <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm">
+            <Link to="/contact"
             <MapPin className="w-5 h-5" />
+            </Link>
           </button>
           <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm">
             <Search className="w-5 h-5" />
