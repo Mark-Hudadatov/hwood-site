@@ -65,11 +65,10 @@ const Header: React.FC = () => {
         >
           {/* Custom SVG Logo Mark */}
           <div className="w-10 h-10 flex items-center justify-center text-[#005f5f]">
-            <img
-              src="/logo.png" // путь из /public
-              alt="HWOOD – Custom Woodwork & Kitchens"
-              className="h-10 md:h-12 w-auto block"
-            />
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+              <path d="M2 2h10l4 4-4 4H2V2z" />
+              <path d="M2 12h14l4 5-4 5H2V12z" />
+            </svg>
           </div>
           <span className="text-4xl font-normal tracking-tight text-black">HWOOD</span>
         </div>
