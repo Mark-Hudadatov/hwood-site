@@ -1,21 +1,126 @@
 /**
- * HOME PAGE
- * =========
+ * HOME PAGE - HWOOD
+ * =================
  * Landing page showing:
- * 1. Hero section (split layout)
- * 2. Services grid (Our Services)
- * 3. What's Next (stories carousel)
- * 4. About Biesse section
- * 
- * Note: Header and Footer are handled by MainLayout
+ * 1. Hero carousel (3 slides)
+ * 2. Services grid (Our Core Services)
+ * 3. Projects & News section
+ * 4. About HWOOD section
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { ArrowRight, ArrowLeft, ChevronRight } from 'lucide-react';
 import { Service, Story } from '../domain/types';
-import { getServices, getStories } from '../services/data/dataService';
+import { getServices, getStories, getHeroSlides, getCompanyInfo } from '../services/data/dataService';
+import { HeroSlide } from '../services/data/mockData';
 import { ROUTES } from '../router';
+
+// =============================================================================
+// HERO CAROUSEL COMPONENT
+// =============================================================================
+
+interface HeroCarouselProps {
+  slides: HeroSlide[];
+}
+
+const HeroCarousel: React.FC<HeroCarouselProps> = ({ slides }) => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
+  const goToSlide = (index: number) => setCurrentSlide(index);
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+
+  if (slides.length === 0) return null;
+
+  const slide = slides[currentSlide];
+
+  return (
+    <div className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
+      {/* Background Image with Transition */}
+      {slides.map((s, idx) => (
+        <div
+          key={s.id}
+          className={`absolute inset-0 transition-opacity duration-1000 ${
+            idx === currentSlide ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <img
+            src={s.imageUrl}
+            alt={s.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+        </div>
+      ))}
+
+      {/* Content */}
+      <div className="absolute inset-0 flex items-center">
+        <div className="w-full max-w-7xl mx-auto px-8 md:px-12 lg:px-16">
+          <div className="max-w-2xl">
+            <h1 
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
+              key={slide.id}
+            >
+              {slide.title}
+            </h1>
+            <p className="text-lg md:text-xl text-white/80 mb-8 leading-relaxed">
+              {slide.subtitle}
+            </p>
+            {slide.ctaLink && (
+              <button
+                onClick={() => navigate(slide.ctaLink!)}
+                className="inline-flex items-center gap-2 bg-white text-[#005f5f] px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition-colors"
+              >
+                {slide.ctaText || 'Learn More'}
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Arrows */}
+      <div className="absolute bottom-8 right-8 md:right-12 flex gap-3">
+        <button
+          onClick={prevSlide}
+          className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-[#005f5f] transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-[#005f5f] transition-colors"
+        >
+          <ArrowRight className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Dots */}
+      <div className="absolute bottom-8 left-8 md:left-12 flex gap-3">
+        {slides.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => goToSlide(idx)}
+            className={`w-3 h-3 rounded-full transition-all ${
+              idx === currentSlide
+                ? 'bg-white w-8'
+                : 'bg-white/40 hover:bg-white/60'
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 // =============================================================================
 // SERVICE CARD COMPONENT
@@ -28,23 +133,19 @@ interface ServiceCardProps {
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, onClick }) => {
   return (
-    <div 
-      className="relative w-full aspect-[3/5] md:aspect-[3/4] rounded-2xl overflow-hidden shadow-lg group cursor-pointer"
+    <div
+      className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-lg group cursor-pointer"
       onClick={onClick}
     >
-      {/* Background Image */}
       <img
         src={service.imageUrl}
         alt={service.title}
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
-      
-      {/* Overlay Gradient */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
-      {/* Content Container */}
       <div className="absolute inset-0 flex flex-col justify-end p-6 pb-8">
-        <h3 className="text-white text-2xl md:text-3xl font-bold mb-3 tracking-wide">
+        <h3 className="text-white text-2xl md:text-3xl font-bold mb-3">
           {service.title}
         </h3>
         <p className="text-white/90 text-sm md:text-base leading-relaxed font-light line-clamp-3">
@@ -52,11 +153,15 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onClick }) => {
         </p>
       </div>
 
-      {/* Accent Bottom Strip */}
-      <div 
-        className="absolute bottom-0 left-0 w-full h-3" 
+      <div
+        className="absolute bottom-0 left-0 w-full h-2"
         style={{ backgroundColor: service.accentColor || '#005f5f' }}
       />
+
+      {/* Hover Arrow */}
+      <div className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/0 group-hover:bg-white flex items-center justify-center transition-colors">
+        <ArrowRight className="w-5 h-5 text-white group-hover:text-[#005f5f] transition-colors" />
+      </div>
     </div>
   );
 };
@@ -71,28 +176,26 @@ interface StoryCardProps {
 
 const StoryCard: React.FC<StoryCardProps> = ({ story }) => {
   return (
-    <div className="flex-shrink-0 w-[300px] md:w-[360px] flex flex-col items-center group cursor-pointer transition-transform duration-300 hover:-translate-y-1">
-      {/* Image Container */}
-      <div className="w-full aspect-square relative mb-6">
+    <div className="flex-shrink-0 w-[280px] md:w-[340px] group cursor-pointer">
+      <div className="w-full aspect-[4/3] relative mb-4 rounded-2xl overflow-hidden">
         <img
           src={story.imageUrl}
           alt={story.title}
-          className="w-full h-full object-cover rounded-[3rem] shadow-lg"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
 
-      {/* Pill Tag */}
-      <div className="mb-4 px-4 py-1 rounded-full border border-white/30 bg-[#004D4D] text-white text-[10px] md:text-xs font-semibold tracking-wider uppercase">
-        {story.type}
+      <div className="mb-3">
+        <span className="inline-block px-3 py-1 rounded-full bg-[#005f5f]/10 text-[#005f5f] text-xs font-semibold uppercase tracking-wide">
+          {story.type}
+        </span>
       </div>
 
-      {/* Title */}
-      <h3 className="text-white text-xl md:text-2xl font-bold text-center leading-tight mb-3 px-2 line-clamp-3">
+      <h3 className="text-gray-900 text-lg font-bold leading-tight mb-2 group-hover:text-[#005f5f] transition-colors line-clamp-2">
         {story.title}
       </h3>
 
-      {/* Date */}
-      <div className="text-white/80 text-sm font-medium">
+      <div className="text-gray-500 text-sm">
         {story.date}
       </div>
     </div>
@@ -100,78 +203,50 @@ const StoryCard: React.FC<StoryCardProps> = ({ story }) => {
 };
 
 // =============================================================================
-// ABOUT BIESSE SECTION
+// ABOUT SECTION
 // =============================================================================
 
-const AboutBiesse: React.FC = () => {
+const AboutSection: React.FC = () => {
+  const companyInfo = getCompanyInfo();
+
   return (
-    <section className="relative w-full min-h-[500px] flex md:pt-12">
-      {/* Main Content Card */}
-      <div className="relative z-10 flex-1 bg-[#EAEAEA] rounded-tl-[80px] md:rounded-tl-[160px] ml-8 md:ml-48 mt-0 flex flex-col justify-center px-8 md:px-24 py-16 shadow-2xl">
-        <div className="max-w-3xl">
-          <h2 className="text-[#005f5f] text-3xl md:text-4xl font-normal mb-8 tracking-tight">
-            About Biesse
-          </h2>
-          
-          <p className="text-gray-900 text-xl md:text-2xl font-light leading-relaxed mb-12 max-w-2xl">
-            We are an international company, manufacturing lines, machines and components for transforming materials into products
-          </p>
-          
-          <button className="bg-[#005f5f] text-white px-8 py-3.5 rounded-md font-semibold hover:bg-[#004d4d] transition-colors inline-block text-sm tracking-wide">
-            Discover Biesse
-          </button>
+    <section className="relative w-full py-20 md:py-32">
+      <div className="max-w-6xl mx-auto px-8 md:px-12 lg:px-16">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 className="text-[#005f5f] text-3xl md:text-4xl font-bold mb-6">
+              About {companyInfo.name}
+            </h2>
+            <p className="text-gray-700 text-lg md:text-xl leading-relaxed mb-8">
+              {companyInfo.description}
+            </p>
+            <p className="text-gray-600 leading-relaxed mb-8">
+              Precision-built solutions for construction companies, architects, and private clients.
+              Our state-of-the-art facility combines advanced CNC technology with traditional
+              craftsmanship to deliver exceptional results.
+            </p>
+            <Link
+              to="/about"
+              className="inline-flex items-center gap-2 bg-[#005f5f] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#004d4d] transition-colors"
+            >
+              Discover {companyInfo.name}
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+          <div className="relative">
+            <img
+              src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=800"
+              alt="HWOOD Production"
+              className="rounded-2xl shadow-xl"
+            />
+            <div className="absolute -bottom-6 -left-6 bg-[#005f5f] text-white p-6 rounded-xl shadow-lg hidden md:block">
+              <div className="text-3xl font-bold">15+</div>
+              <div className="text-sm text-white/80">Years Experience</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-  );
-};
-
-// =============================================================================
-// HERO SECTION
-// =============================================================================
-
-const HeroSection: React.FC = () => {
-  return (
-    <div className="w-full h-[70vh] md:h-[80vh] flex flex-col md:flex-row relative overflow-hidden">
-      {/* Left Side: Industrial Dark */}
-      <div className="w-full md:w-1/2 relative bg-zinc-900 h-1/2 md:h-full">
-        <img 
-          src="https://images.unsplash.com/photo-1565043589221-1a6fd9ae45f7?auto=format&fit=crop&q=80&w=1600" 
-          alt="CNC Machine Detail" 
-          className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
-        />
-        <div className="absolute inset-0 bg-black/40" />
-        
-        <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-16 pb-20 md:pb-32">
-          <h2 className="text-white text-2xl md:text-4xl font-medium max-w-md leading-tight">
-            Lines, machines and components for machining
-          </h2>
-        </div>
-
-        {/* Pagination Dots */}
-        <div className="absolute bottom-8 left-8 md:left-12 flex gap-3">
-          <button className="w-2.5 h-2.5 rounded-full bg-white border border-white" />
-          <button className="w-2.5 h-2.5 rounded-full border border-white/60 hover:bg-white/40 transition-colors" />
-          <button className="w-2.5 h-2.5 rounded-full border border-white/60 hover:bg-white/40 transition-colors" />
-        </div>
-      </div>
-
-      {/* Right Side: Purple Abstract */}
-      <div className="w-full md:w-1/2 relative bg-purple-900 h-1/2 md:h-full overflow-hidden">
-        <img 
-          src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&q=80&w=1600" 
-          alt="Polymers Structure" 
-          className="absolute inset-0 w-full h-full object-cover opacity-90 transition-transform duration-1000 hover:scale-105"
-        />
-        
-        <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 pb-20 md:pb-32">
-          <h2 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold flex items-center gap-4 group cursor-pointer">
-            polymers and composites
-            <ArrowRight className="w-8 h-8 md:w-12 md:h-12 mt-2 group-hover:translate-x-2 transition-transform" />
-          </h2>
-        </div>
-      </div>
-    </div>
   );
 };
 
@@ -183,25 +258,26 @@ export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [services, setServices] = useState<Service[]>([]);
   const [stories, setStories] = useState<Story[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Load data on mount
   useEffect(() => {
     const loadData = async () => {
-      const [servicesData, storiesData] = await Promise.all([
+      const [servicesData, storiesData, slidesData] = await Promise.all([
         getServices(),
         getStories(),
+        getHeroSlides(),
       ]);
       setServices(servicesData);
       setStories(storiesData);
+      setHeroSlides(slidesData);
     };
     loadData();
   }, []);
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 400, behavior: 'smooth' });
+      scrollContainerRef.current.scrollBy({ left: 360, behavior: 'smooth' });
     }
   };
 
@@ -209,50 +285,37 @@ export const HomePage: React.FC = () => {
     navigate(ROUTES.SERVICE(service.slug));
   };
 
-  const handleGenerateStory = async () => {
-    setIsGenerating(true);
-    // Simulate AI generation (integrate your geminiService if needed)
-    setTimeout(() => {
-      const newStory: Story = {
-        id: Date.now().toString(),
-        title: 'AI-Generated Innovation Story',
-        date: new Date().toLocaleDateString(),
-        type: 'EVENTS',
-        imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800',
-        isGenerated: true,
-      };
-      setStories(prev => [...prev, newStory]);
-      setIsGenerating(false);
-      
-      // Auto scroll to new item
-      setTimeout(() => {
-        if (scrollContainerRef.current) {
-          scrollContainerRef.current.scrollTo({ 
-            left: scrollContainerRef.current.scrollWidth,
-            behavior: 'smooth' 
-          });
-        }
-      }, 100);
-    }, 1500);
-  };
-
   return (
     <>
-      {/* 1. Hero Block */}
-      <HeroSection />
+      {/* 1. Hero Carousel */}
+      <HeroCarousel slides={heroSlides} />
 
-      {/* 2. Our Services (Light Grey Background) */}
-      <section className="w-full bg-[#EAEAEA] py-16 md:py-20 lg:py-24">
-        <div className="w-full px-8 md:px-12 lg:px-16 flex flex-col">
-          <h2 className="text-[#005f5f] text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-12">
-            Our Services
-          </h2>
+      {/* 2. Our Core Services */}
+      <section className="w-full bg-[#F5F5F5] py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-8 md:px-12 lg:px-16">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
+            <div>
+              <h2 className="text-[#005f5f] text-3xl md:text-4xl lg:text-5xl font-bold mb-2">
+                Our Core Services
+              </h2>
+              <p className="text-gray-600 text-lg">
+                Complete production solutions for your projects
+              </p>
+            </div>
+            <Link
+              to="/about"
+              className="text-[#005f5f] font-semibold flex items-center gap-2 hover:gap-3 transition-all"
+            >
+              View all services
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {services.map((service) => (
-              <ServiceCard 
-                key={service.id} 
-                service={service} 
+              <ServiceCard
+                key={service.id}
+                service={service}
                 onClick={() => handleServiceClick(service)}
               />
             ))}
@@ -260,80 +323,81 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* SHARED BACKGROUND CONTAINER FOR: WHAT'S NEXT, ABOUT BIESSE */}
-      <div className="relative w-full bg-[#002828] overflow-hidden">
-        {/* Background Texture Elements */}
-        <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
-          <div className="absolute inset-0 bg-[#001f1f]" />
-          <div className="absolute -left-16 -top-40 h-[200%] w-64 bg-[#004D4D] transform -skew-x-[20deg]" />
-          <div className="absolute left-32 -top-40 h-[200%] w-40 bg-[#005f5f] transform -skew-x-[20deg] opacity-60" />
-          <div className="absolute left-80 -top-40 h-[200%] w-24 bg-[#003f3f] transform -skew-x-[20deg] opacity-40" />
-          <div className="absolute left-[28rem] -top-40 h-[200%] w-12 bg-[#004D4D] transform -skew-x-[20deg] opacity-20" />
-        </div>
+      {/* 3. Recent Projects & News */}
+      <section className="w-full bg-white py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-8 md:px-12 lg:px-16">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
+            <div>
+              <h2 className="text-gray-900 text-3xl md:text-4xl font-bold mb-2">
+                Recent Projects & News
+              </h2>
+              <p className="text-gray-600">
+                Stay updated with our latest work and announcements
+              </p>
+            </div>
+            <Link
+              to="/portfolio"
+              className="text-[#005f5f] font-semibold flex items-center gap-2 hover:gap-3 transition-all"
+            >
+              View all
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
 
-        {/* 3. What's Next */}
-        <section className="relative z-10 w-full text-white py-16 md:py-20 lg:py-24">
-          <div className="w-full px-8 md:px-12 lg:px-16 flex flex-col">
-            
-            {/* Header Section */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 md:mb-16 gap-6">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                What's Next
-              </h1>
-
-              <div className="flex gap-4">
-                {/* Gemini Generation Button */}
-                <button 
-                  onClick={handleGenerateStory}
-                  disabled={isGenerating}
-                  className={`
-                    px-6 py-2 rounded-lg border border-teal-300/50 flex items-center gap-2
-                    transition-all duration-300 hover:bg-white/10
-                    ${isGenerating ? 'opacity-50 cursor-wait' : ''}
-                  `}
-                >
-                  <Sparkles className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
-                  <span className="text-sm font-medium">
-                    {isGenerating ? 'Dreaming...' : 'Dream with AI'}
-                  </span>
-                </button>
-
-                {/* See all Button */}
-                <button className="px-8 py-2 rounded-lg border border-white text-white hover:bg-white hover:text-[#005f5f] transition-colors duration-300 text-sm font-medium">
-                  See all
-                </button>
-              </div>
+          <div className="relative">
+            <div
+              ref={scrollContainerRef}
+              className="flex gap-6 overflow-x-auto no-scrollbar pb-4 scroll-smooth"
+            >
+              {stories.map((story) => (
+                <StoryCard key={story.id} story={story} />
+              ))}
+              <div className="w-8 flex-shrink-0" />
             </div>
 
-            {/* Carousel Section */}
-            <div className="relative w-full">
-              <div 
-                ref={scrollContainerRef}
-                className="flex gap-8 md:gap-12 overflow-x-auto no-scrollbar pb-10 px-4 -mx-4 scroll-smooth"
+            {/* Scroll Arrow */}
+            <div className="absolute right-0 top-1/3 -translate-y-1/2 z-10 hidden md:block">
+              <button
+                onClick={scrollRight}
+                className="w-12 h-12 bg-[#005f5f] rounded-full flex items-center justify-center shadow-lg hover:bg-[#004d4d] transition-colors"
               >
-                {stories.map((story) => (
-                  <StoryCard key={story.id} story={story} />
-                ))}
-                <div className="w-12 flex-shrink-0" />
-              </div>
-
-              {/* Floating Navigation Arrow (Right) */}
-              <div className="absolute right-0 top-1/2 -translate-y-[80%] z-10 hidden md:block">
-                <button 
-                  onClick={scrollRight}
-                  className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform cursor-pointer"
-                  aria-label="Scroll right"
-                >
-                  <ArrowRight className="w-6 h-6 text-[#005f5f]" />
-                </button>
-              </div>
+                <ArrowRight className="w-5 h-5 text-white" />
+              </button>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* 4. About Biesse */}
-        <AboutBiesse />
+      {/* 4. About Section */}
+      <div className="bg-[#F5F5F5]">
+        <AboutSection />
       </div>
+
+      {/* 5. CTA Section */}
+      <section className="bg-[#005f5f] py-16 md:py-20">
+        <div className="max-w-4xl mx-auto px-8 md:px-12 text-center">
+          <h2 className="text-white text-3xl md:text-4xl font-bold mb-4">
+            Ready to Start Your Project?
+          </h2>
+          <p className="text-white/80 text-lg mb-8">
+            Contact us for a free consultation and quote. Our team is ready to bring your vision to life.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/quote"
+              className="bg-white text-[#005f5f] px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition-colors"
+            >
+              Get a Quote
+            </Link>
+            <Link
+              to="/contact"
+              className="border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white/10 transition-colors"
+            >
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 };
