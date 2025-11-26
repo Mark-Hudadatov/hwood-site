@@ -351,9 +351,9 @@ export const HomePage: React.FC = () => {
   return (
     <>
       {/* 1. Hero Block */}
-      <HeroSection 
+      
         <HeroCarousel slides={heroSlides} />
-      />
+      
 
       {/* 2. Our Services (Light Grey Background) */}
       <section className="w-full bg-[#EAEAEA] py-16 md:py-20 lg:py-24">
