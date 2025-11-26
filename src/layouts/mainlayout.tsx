@@ -50,13 +50,13 @@ const Header: React.FC = () => {
         {/* Center Links */}
         <div className="hidden lg:flex items-center gap-8 text-base font-semibold text-black">
           <button className="flex items-center gap-1 hover:text-teal-700 transition-colors">
-            Lines <ChevronDown className="w-4 h-4" />
+            Modular & Cabinet Systems <ChevronDown className="w-4 h-4" />
           </button>
           <button className="flex items-center gap-1 hover:text-teal-700 transition-colors">
-            Machines <ChevronDown className="w-4 h-4" />
+            CNC Board Processing <ChevronDown className="w-4 h-4" />
           </button>
           <button className="flex items-center gap-1 hover:text-teal-700 transition-colors">
-            Components <ChevronDown className="w-4 h-4" />
+            Furniture Fronts Production <ChevronDown className="w-4 h-4" />
           </button>
         </div>
 
