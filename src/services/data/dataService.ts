@@ -27,6 +27,9 @@ import {
   PRODUCT_CATEGORIES,
   PRODUCTS,
   STORIES,
+  HERO_SLIDES,
+  COMPANY_INFO,
+  HeroSlide,
 } from './mockData';
 
 // Simulate network delay (set to 0 for instant, or 100-300 for realistic feel)
@@ -332,4 +335,47 @@ export async function getSubservicePageData(subserviceSlug: string): Promise<{
   const products = PRODUCTS.filter(p => categoryIds.includes(p.categoryId));
   
   return { subservice, service, categories, products };
+}
+
+// =============================================================================
+// HERO SLIDES
+// =============================================================================
+
+/**
+ * Get all hero slides for homepage carousel
+ */
+export async function getHeroSlides(): Promise<HeroSlide[]> {
+  await delay(SIMULATED_DELAY);
+  return HERO_SLIDES;
+}
+
+// =============================================================================
+// COMPANY INFO
+// =============================================================================
+
+/**
+ * Get company information
+ */
+export function getCompanyInfo() {
+  return COMPANY_INFO;
+}
+
+// =============================================================================
+// NAVIGATION DATA
+// =============================================================================
+
+/**
+ * Get navigation menu data (services with their subservices)
+ */
+export async function getNavigationData(): Promise<{
+  services: (Service & { subservices: Subservice[] })[];
+}> {
+  await delay(SIMULATED_DELAY);
+  
+  const servicesWithSubs = SERVICES.map(service => ({
+    ...service,
+    subservices: SUBSERVICES.filter(sub => sub.serviceId === service.id),
+  }));
+  
+  return { services: servicesWithSubs };
 }
