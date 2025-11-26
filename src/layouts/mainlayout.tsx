@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, Link } from 'react-router-dom';
-import { MapPin, Search, User, ChevronDown, Globe, Facebook, Instagram, Linkedin, Youtube, MessageCircle, Menu } from 'lucide-react';
+import { MapPin, Search, User, ChevronDown, Globe, Facebook, Instagram, Linkedin, Youtube, MessageCircle, Menu, X } from 'lucide-react';
 import { Service, Subservice } from '../domain/types';
 import { getNavigationData, getCompanyInfo } from '../services/data/dataService';
 
@@ -137,7 +137,6 @@ const Header: React.FC = () => {
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
-        </div>
       </nav>
 
     {/* Mobile Menu */}
