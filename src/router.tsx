@@ -18,7 +18,7 @@
 import { createBrowserRouter, RouteObject } from 'react-router-dom';
 
 // Layout
-import { MainLayout } from './layouts/MainLayout';
+import { MainLayout } from './layouts/mainlayout';
 
 // Pages
 import { HomePage } from './pages/HomePage';
