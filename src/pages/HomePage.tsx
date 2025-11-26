@@ -292,6 +292,7 @@ export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [services, setServices] = useState<Service[]>([]);
   const [stories, setStories] = useState<Story[]>([]);
+  const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -301,9 +302,11 @@ export const HomePage: React.FC = () => {
       const [servicesData, storiesData] = await Promise.all([
         getServices(),
         getStories(),
+        getHeroSlides(),
       ]);
       setServices(servicesData);
       setStories(storiesData);
+      setHeroSlides(slidesData);
     };
     loadData();
   }, []);
@@ -348,7 +351,9 @@ export const HomePage: React.FC = () => {
   return (
     <>
       {/* 1. Hero Block */}
-      <HeroSection />
+      <HeroSection 
+        <HeroCarousel slides={heroSlides} />
+      />
 
       {/* 2. Our Services (Light Grey Background) */}
       <section className="w-full bg-[#EAEAEA] py-16 md:py-20 lg:py-24">
