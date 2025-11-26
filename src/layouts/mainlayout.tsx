@@ -20,15 +20,13 @@ const Header: React.FC = () => {
     <header className="flex flex-col w-full bg-[#EAEAEA] relative z-20 shadow-sm font-sans">
       {/* Top Utility Bar */}
       <div className="hidden md:flex justify-end items-center px-8 md:px-12 py-2 gap-6 text-[11px] font-bold text-gray-800 tracking-wide">
-        <a href="#" className="hover:text-teal-700 transition-colors flex items-center gap-1">
-          Company <ChevronDown className="w-3 h-3" />
-        </a>
+        <a href="#" className="hover:text-teal-700 transition-colors">Company</a>
         <a href="#" className="hover:text-teal-700 transition-colors">News</a>
         <a href="#" className="hover:text-teal-700 transition-colors">Contacts</a>
         
         <button className="flex items-center gap-1 border border-gray-400 rounded-full px-3 py-1 hover:bg-white hover:border-transparent transition-all">
           <Globe className="w-3 h-3" />
-          <span>WW EN</span>
+          <span>HEB</span>
         </button>
       </div>
 
@@ -46,7 +44,7 @@ const Header: React.FC = () => {
               <path d="M2 12h14l4 5-4 5H2V12z" />
             </svg>
           </div>
-          <span className="text-4xl font-normal tracking-tight text-black">Biesse</span>
+          <span className="text-4xl font-normal tracking-tight text-black">HWOOD</span>
         </div>
 
         {/* Center Links */}
@@ -96,7 +94,7 @@ const Footer: React.FC = () => {
               <path d="M2 12h14l4 5-4 5H2V12z" />
             </svg>
           </div>
-          <span className="text-3xl font-normal tracking-tight">Biesse</span>
+          <span className="text-3xl font-normal tracking-tight">HWOOD</span>
         </div>
 
         {/* Social Icons */}
@@ -116,7 +114,7 @@ const Footer: React.FC = () => {
           <h3 className="text-lg font-bold mb-4">Stay up to date</h3>
           <div className="w-full h-px bg-gray-600 mb-6" />
           <p className="mb-8 text-sm text-gray-300 leading-relaxed max-w-md">
-            New products, events, news: Subscribe to our newsletter and stay up to date with news from the world of Biesse.
+            Subscribe to our newsletter and stay up to date with news from the world of HWOOD.
           </p>
           <button className="bg-white text-[#002828] px-8 py-3 rounded font-bold hover:bg-gray-200 transition-colors">
             Subscribe
@@ -128,7 +126,7 @@ const Footer: React.FC = () => {
           <h3 className="text-lg font-bold mb-4">Need help?</h3>
           <div className="w-full h-px bg-[#005f5f] mb-6" />
           <p className="mb-8 text-sm text-gray-300 leading-relaxed max-w-md">
-            We provide after-sales service and spare parts with a view to supporting the efficiency and productivity of installed machinery.
+            We provide after-sales service supporting the reliability and quality of our services.
           </p>
           <button className="bg-[#005f5f] text-white px-8 py-3 rounded font-bold hover:bg-[#004d4d] transition-colors">
             Request support
@@ -138,13 +136,13 @@ const Footer: React.FC = () => {
 
       {/* Bottom Row: Copyright & Links */}
       <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between gap-4 text-[11px] text-gray-400 tracking-wide">
-        <p>Copyright Biesse | CF e P.IVA IT 00113220412 Reg. Imp. Pesaro Urbino Nr. 1682 | Cap. Soc. € 27.402.593 i.v</p>
+        <p>Copyright HWOOD | Israel, Netanya </p>
         
         <div className="flex flex-wrap gap-6">
           <a href="#" className="hover:text-white transition-colors">Privacy center</a>
           <a href="#" className="hover:text-white transition-colors">Privacy and cookie policy</a>
           <a href="#" className="hover:text-white transition-colors">List of cookies</a>
-          <a href="#" className="hover:text-white transition-colors">Whistleblowing</a>
+          
         </div>
       </div>
     </footer>
@@ -174,19 +172,25 @@ const SideMenu: React.FC = () => {
 
 const FooterWrapper: React.FC = () => {
   return (
-    <div className="relative w-full bg-[#002828] overflow-hidden">
-      {/* Background Texture Elements */}
-      <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
+    <div className="relative w-full bg-[#002828] overflow-hidden pt-16">
+      {/* Background Texture - perfectly aligned, wider, shifted */}
+      <div className="absolute inset-0 w-[140%] -left-[10%] h-full z-0 pointer-events-none">
+        {/* Base layer */}
         <div className="absolute inset-0 bg-[#001f1f]" />
-        <div className="absolute -left-16 -top-40 h-[200%] w-64 bg-[#004D4D] transform -skew-x-[20deg]" />
-        <div className="absolute left-32 -top-40 h-[200%] w-40 bg-[#005f5f] transform -skew-x-[20deg] opacity-60" />
-        <div className="absolute left-80 -top-40 h-[200%] w-24 bg-[#003f3f] transform -skew-x-[20deg] opacity-40" />
-        <div className="absolute left-[28rem] -top-40 h-[200%] w-12 bg-[#004D4D] transform -skew-x-[20deg] opacity-20" />
+
+        {/* Diagonal Stripes (matching upper block) */}
+        <div className="absolute -left-40 -top-40 h-[200%] w-80 bg-[#004D4D] -skew-x-[20deg]" />
+        <div className="absolute left-0 -top-40 h-[200%] w-64 bg-[#005f5f] -skew-x-[20deg] opacity-70" />
+        <div className="absolute left-56 -top-40 h-[200%] w-40 bg-[#003f3f] -skew-x-[20deg] opacity-50" />
+        <div className="absolute left-96 -top-40 h-[200%] w-32 bg-[#004D4D] -skew-x-[20deg] opacity-30" />
       </div>
+
+      {/* Actual Footer Content */}
       <Footer />
     </div>
   );
 };
+
 
 // =============================================================================
 // MAIN LAYOUT EXPORT
