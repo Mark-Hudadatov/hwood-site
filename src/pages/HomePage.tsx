@@ -5,7 +5,7 @@
  * 1. Hero section (split layout)
  * 2. Services grid (Our Services)
  * 3. What's Next (stories carousel)
- * 4. About Biesse section
+ * 4. About HWOOD section
  * 
  * Note: Header and Footer are handled by MainLayout
  */
@@ -101,17 +101,17 @@ const StoryCard: React.FC<StoryCardProps> = ({ story }) => {
 };
 
 // =============================================================================
-// ABOUT BIESSE SECTION
+// ABOUT HWOOD SECTION
 // =============================================================================
 
-const AboutBiesse: React.FC = () => {
+const AboutHWOOD: React.FC = () => {
   return (
     <section className="relative w-full min-h-[500px] flex md:pt-12">
       {/* Main Content Card */}
       <div className="relative z-10 flex-1 bg-[#EAEAEA] rounded-tl-[80px] md:rounded-tl-[160px] ml-8 md:ml-48 mt-0 flex flex-col justify-center px-8 md:px-24 py-16 shadow-2xl">
         <div className="max-w-3xl">
           <h2 className="text-[#005f5f] text-3xl md:text-4xl font-normal mb-8 tracking-tight">
-            About Biesse
+            About HWOOD
           </h2>
           
           <p className="text-gray-900 text-xl md:text-2xl font-light leading-relaxed mb-12 max-w-2xl">
@@ -119,7 +119,7 @@ const AboutBiesse: React.FC = () => {
           </p>
           
           <button className="bg-[#005f5f] text-white px-8 py-3.5 rounded-md font-semibold hover:bg-[#004d4d] transition-colors inline-block text-sm tracking-wide">
-            Discover Biesse
+            Discover HWOOD
           </button>
         </div>
       </div>
@@ -145,7 +145,7 @@ const HeroSection: React.FC = () => {
         
         <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-16 pb-20 md:pb-32">
           <h2 className="text-white text-2xl md:text-4xl font-medium max-w-md leading-tight">
-            Cabinets engineered for kitchens, wardrobes, bathrooms, and storage rooms
+            Engineered for kitchens, bathrooms, and storage rooms
           </h2>
         </div>
 
@@ -167,7 +167,7 @@ const HeroSection: React.FC = () => {
         
         <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 pb-20 md:pb-32">
           <h2 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold flex items-center gap-4 group cursor-pointer">
-            Modular Cabinet Systems for Any Project
+            Modular Cabinet Systems
             <ArrowRight className="w-8 h-8 md:w-12 md:h-12 mt-2 group-hover:translate-x-2 transition-transform" />
           </h2>
         </div>
@@ -216,7 +216,7 @@ export const HomePage: React.FC = () => {
     setTimeout(() => {
       const newStory: Story = {
         id: Date.now().toString(),
-        title: 'AI-Generated Innovation Story',
+        title: 'HWOOD Conference Stand',
         date: new Date().toLocaleDateString(),
         type: 'EVENTS',
         imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800',
@@ -261,7 +261,7 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* SHARED BACKGROUND CONTAINER FOR: WHAT'S NEXT, ABOUT BIESSE */}
+      {/* SHARED BACKGROUND CONTAINER FOR: WHAT'S NEXT, ABOUT HWOOD */}
       <div className="relative w-full bg-[#002828] overflow-hidden">
         {/* Background Texture Elements */}
         <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
@@ -295,7 +295,7 @@ export const HomePage: React.FC = () => {
                 >
                   <Sparkles className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
                   <span className="text-sm font-medium">
-                    {isGenerating ? 'Dreaming...' : 'Dream with AI'}
+                    {isGenerating ? 'Dreaming...' : 'See more'}
                   </span>
                 </button>
 
@@ -332,8 +332,8 @@ export const HomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* 4. About Biesse */}
-        <AboutBiesse />
+        {/* 4. About HWOOD */}
+        <AboutHWOOD />
       </div>
     </>
   );
