@@ -19,113 +19,6 @@ import { HeroSlide } from '../services/data/mockData';
 import { ROUTES } from '../router';
 
 // =============================================================================
-// HERO CAROUSEL COMPONENT
-// =============================================================================
-
-interface HeroCarouselProps {
-  slides: HeroSlide[];
-}
-
-const HeroCarousel: React.FC<HeroCarouselProps> = ({ slides }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, [slides.length]);
-
-  const goToSlide = (index: number) => setCurrentSlide(index);
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-
-  if (slides.length === 0) return null;
-
-  const slide = slides[currentSlide];
-
-  return (
-    <div className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
-      {/* Background Image with Transition */}
-      {slides.map((s, idx) => (
-        <div
-          key={s.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ${
-            idx === currentSlide ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <img
-            src={s.imageUrl}
-            alt={s.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-        </div>
-      ))}
-
-      {/* Content */}
-      <div className="absolute inset-0 flex items-center">
-        <div className="w-full max-w-7xl mx-auto px-8 md:px-12 lg:px-16">
-          <div className="max-w-2xl">
-            <h1 
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
-              key={slide.id}
-            >
-              {slide.title}
-            </h1>
-            <p className="text-lg md:text-xl text-white/80 mb-8 leading-relaxed">
-              {slide.subtitle}
-            </p>
-            {slide.ctaLink && (
-              <button
-                onClick={() => navigate(slide.ctaLink!)}
-                className="inline-flex items-center gap-2 bg-white text-[#005f5f] px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition-colors"
-              >
-                {slide.ctaText || 'Learn More'}
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation Arrows */}
-      <div className="absolute bottom-8 right-8 md:right-12 flex gap-3">
-        <button
-          onClick={prevSlide}
-          className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-[#005f5f] transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-        <button
-          onClick={nextSlide}
-          className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-[#005f5f] transition-colors"
-        >
-          <ArrowRight className="w-5 h-5" />
-        </button>
-      </div>
-
-      {/* Dots */}
-      <div className="absolute bottom-8 left-8 md:left-12 flex gap-3">
-        {slides.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => goToSlide(idx)}
-            className={`w-3 h-3 rounded-full transition-all ${
-              idx === currentSlide
-                ? 'bg-white w-8'
-                : 'bg-white/40 hover:bg-white/60'
-            }`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-
-// =============================================================================
 // SERVICE CARD COMPONENT
 // =============================================================================
 
@@ -227,9 +120,7 @@ const AboutHWOOD: React.FC = () => {
           </p>
           
           <button className="bg-[#005f5f] text-white px-8 py-3.5 rounded-md font-semibold hover:bg-[#004d4d] transition-colors inline-block text-sm tracking-wide">
-            <Link> to="/about"
             Discover HWOOD
-            </Link>
           </button>
         </div>
       </div>
@@ -294,7 +185,6 @@ export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [services, setServices] = useState<Service[]>([]);
   const [stories, setStories] = useState<Story[]>([]);
-  const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -304,11 +194,9 @@ export const HomePage: React.FC = () => {
       const [servicesData, storiesData] = await Promise.all([
         getServices(),
         getStories(),
-        getHeroSlides(),
       ]);
       setServices(servicesData);
       setStories(storiesData);
-      setHeroSlides(slidesData);
     };
     loadData();
   }, []);
@@ -353,9 +241,7 @@ export const HomePage: React.FC = () => {
   return (
     <>
       {/* 1. Hero Block */}
-      
-        <HeroCarousel slides={heroSlides} />
-      
+      <HeroSection />
 
       {/* 2. Our Services (Light Grey Background) */}
       <section className="w-full bg-[#EAEAEA] py-16 md:py-20 lg:py-24">
@@ -410,15 +296,13 @@ export const HomePage: React.FC = () => {
                 >
                   <Sparkles className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
                   <span className="text-sm font-medium">
-                    {isGenerating ? 'HWOOD' : 'Generate'}
+                    {isGenerating ? 'HWOOD' : 'See more'}
                   </span>
                 </button>
 
                 {/* See all Button */}
                 <button className="px-8 py-2 rounded-lg border border-white text-white hover:bg-white hover:text-[#005f5f] transition-colors duration-300 text-sm font-medium">
-                  <Link> to="/portfolio"
                   See all
-                  </Link>
                 </button>
               </div>
             </div>
