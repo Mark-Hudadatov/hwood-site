@@ -13,7 +13,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { Service, Story } from '../domain/types';
+import { Service,  } from '../domain/types';
 import { getServices, getStories, getHeroSlides, getCompanyInfo} from '../services/data/dataService';
 import { HeroSlide } from '../services/data/mockData';
 import { ROUTES } from '../router';
@@ -63,7 +63,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onClick }) => {
 };
 
 // =============================================================================
-// STORY CARD COMPONENT
+//  CARD COMPONENT
 // =============================================================================
 
 interface StoryCardProps {
@@ -73,16 +73,17 @@ interface StoryCardProps {
 const StoryCard: React.FC<StoryCardProps> = ({ story }) => {
   return (
     <div className="flex-shrink-0 w-[300px] md:w-[360px] flex flex-col items-center group cursor-pointer transition-transform duration-300 hover:-translate-y-1">
-      {/* Image Container */}
-      <div className="w-full aspect-square relative mb-6">
+
+      {/* Image Wrapper — фиксированная область */}
+      <div className="relative w-full aspect-[4/5] overflow-hidden rounded-[3rem] shadow-lg mb-6">
         <img
           src={story.imageUrl}
           alt={story.title}
-          className="w-full h-full object-cover rounded-[3rem] shadow-lg"
+          className="absolute inset-0 w-full h-full object-cover"
         />
       </div>
 
-      {/* Pill Tag */}
+      {/* Pill */}
       <div className="mb-4 px-4 py-1 rounded-full border border-white/30 bg-[#004D4D] text-white text-[10px] md:text-xs font-semibold tracking-wider uppercase">
         {story.type}
       </div>
