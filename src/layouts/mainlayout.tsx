@@ -65,7 +65,7 @@ const Header: React.FC = () => {
         >
           {/* Logo Image */}
           <img 
-            src="/src/public/logo.png" 
+            src="/logo.png" 
             alt="HWOOD Logo" 
             className="h-12 w-auto"
           />
@@ -149,7 +149,7 @@ const Footer: React.FC = () => {
         {/* Logo */}
         <div className="flex items-center gap-3">
           <img 
-            src="/src/public/logo.png" 
+            src="/logo.png" 
             alt="HWOOD Logo" 
             className="h-10 w-auto brightness-0 invert"
           />
