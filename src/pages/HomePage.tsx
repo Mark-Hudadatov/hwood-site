@@ -13,7 +13,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { Service,  } from '../domain/types';
+import { Service, Story } from '../domain/types';
 import { getServices, getStories, getHeroSlides, getCompanyInfo} from '../services/data/dataService';
 import { HeroSlide } from '../services/data/mockData';
 import { ROUTES } from '../router';
@@ -106,6 +106,8 @@ const StoryCard: React.FC<StoryCardProps> = ({ story }) => {
 // =============================================================================
 
 const AboutHWOOD: React.FC = () => {
+  const navigate = useNavigate();
+  
   return (
     <section className="relative w-full min-h-[500px] flex md:pt-12">
       {/* Main Content Card */}
@@ -119,7 +121,10 @@ const AboutHWOOD: React.FC = () => {
             We are modern production powerhouse delivering modular cabinet systems, CNC processing, and premium furniture fronts for residential and commercial projects.
           </p>
           
-          <button className="bg-[#005f5f] text-white px-8 py-3.5 rounded-md font-semibold hover:bg-[#004d4d] transition-colors inline-block text-sm tracking-wide">
+          <button 
+            onClick={() => navigate('/about')}
+            className="bg-[#005f5f] text-white px-8 py-3.5 rounded-md font-semibold hover:bg-[#004d4d] transition-colors inline-block text-sm tracking-wide"
+          >
             Discover HWOOD
           </button>
         </div>
@@ -301,7 +306,10 @@ export const HomePage: React.FC = () => {
                 </button>
 
                 {/* See all Button */}
-                <button className="px-8 py-2 rounded-lg border border-white text-white hover:bg-white hover:text-[#005f5f] transition-colors duration-300 text-sm font-medium">
+                <button 
+                  onClick={() => navigate('/portfolio')}
+                  className="px-8 py-2 rounded-lg border border-white text-white hover:bg-white hover:text-[#005f5f] transition-colors duration-300 text-sm font-medium"
+                >
                   See all
                 </button>
               </div>
