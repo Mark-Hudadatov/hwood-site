@@ -27,27 +27,28 @@ interface SubserviceCardProps {
 const SubserviceCard: React.FC<SubserviceCardProps> = ({ subservice, onClick }) => {
   return (
     <div 
-      className="flex-shrink-0 w-[280px] md:w-[360px] group cursor-pointer"
+      className="flex-shrink-0 w-[280px] md:w-[320px] relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg group cursor-pointer"
       onClick={onClick}
     >
-      {/* Image Container */}
-      <div className="w-full aspect-[4/3] rounded-3xl overflow-hidden mb-5 shadow-lg">
-        <img
-          src={subservice.imageUrl}
-          alt={subservice.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
+      {/* Background Image */}
+      <img
+        src={subservice.imageUrl}
+        alt={subservice.title}
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+      />
+      
+      {/* Overlay Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+
+      {/* Content Container */}
+      <div className="absolute inset-0 flex flex-col justify-end p-6 pb-8">
+        <h3 className="text-white text-xl md:text-2xl font-bold mb-2 tracking-wide">
+          {subservice.title}
+        </h3>
+        <p className="text-white/90 text-sm leading-relaxed font-light line-clamp-2">
+          {subservice.description}
+        </p>
       </div>
-      
-      {/* Title */}
-      <h3 className="text-[#1A1A1A] text-xl md:text-2xl font-bold mb-2 group-hover:text-[#005f5f] transition-colors">
-        {subservice.title}
-      </h3>
-      
-      {/* Description */}
-      <p className="text-[#1A1A1A]/70 text-sm leading-relaxed line-clamp-2">
-        {subservice.description}
-      </p>
     </div>
   );
 };
