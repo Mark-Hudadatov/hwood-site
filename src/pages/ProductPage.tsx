@@ -192,6 +192,25 @@ export const ProductPage: React.FC = () => {
               )}
             </div>
 
+            {/* Product Video */}
+            {product.videoUrl && (
+              <div className="mt-6">
+                <h3 className="text-lg font-bold text-[#1A1A1A] mb-4">360° Product View</h3>
+                <div className="w-full aspect-video bg-gray-100 rounded-2xl overflow-hidden">
+                  <video 
+                    src={product.videoUrl}
+                    controls
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-contain"
+                  >
+                    Your browser does not support video playback.
+                  </video>
+                </div>
+              </div>
+            )}
+
             {/* Thumbnails */}
             {galleryImages.length > 1 && (
               <div className="flex gap-4 mt-6 overflow-x-auto no-scrollbar py-2">
