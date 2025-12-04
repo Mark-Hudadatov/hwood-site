@@ -361,9 +361,9 @@ export const PRODUCTS: Product[] = [
     title: 'B-80-D2-S1',
     subtitle: 'Premium base cabinet with double drawers',
     description: 'High-quality base cabinet featuring two spacious soft-close drawers. Engineered for maximum storage efficiency with premium hardware and durable construction. Ideal for modern kitchen layouts requiring accessible lower storage.',
-    imageUrl: 'https://drive.google.com/uc?export=view&id=1RFmKg286jezMZIsdIGA7ISRLvCFpKObU',
+    imageUrl: '/B-80-D2-S1.webp',
     galleryImages: [
-      'https://drive.google.com/uc?export=view&id=1RFmKg286jezMZIsdIGA7ISRLvCFpKObU',
+      '/B-80-D2-S1.webp',
     ],
     features: [
       'Double drawer configuration',
@@ -541,5 +541,5 @@ export const COMPANY_INFO = {
   description: 'A modern production powerhouse delivering modular cabinet systems, CNC processing, and premium furniture fronts for residential and commercial projects.',
   phone: '+972-54-922-2804',
   email: 'office@skylum.co.il',
-  address: 'Ha Masger, 20, Netanya, Israel',
+  address: 'Ha Masger 20, Netanya, Israel',
 };
