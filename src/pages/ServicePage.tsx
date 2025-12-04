@@ -8,9 +8,8 @@
  * Shows: Kitchen modules, Bathrooms, Wardrobes, Drawers...
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { Service, Subservice } from '../domain/types';
 import { getServiceBySlug, getSubservicesByServiceSlug } from '../services/data/dataService';
 import { ROUTES } from '../router';
@@ -27,7 +26,7 @@ interface SubserviceCardProps {
 const SubserviceCard: React.FC<SubserviceCardProps> = ({ subservice, onClick }) => {
   return (
     <div 
-      className="flex-shrink-0 w-[280px] md:w-[320px] relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg group cursor-pointer"
+      className="relative w-full aspect-[3/5] md:aspect-[3/4] rounded-2xl overflow-hidden shadow-lg group cursor-pointer"
       onClick={onClick}
     >
       {/* Background Image */}
@@ -42,13 +41,18 @@ const SubserviceCard: React.FC<SubserviceCardProps> = ({ subservice, onClick }) 
 
       {/* Content Container */}
       <div className="absolute inset-0 flex flex-col justify-end p-6 pb-8">
-        <h3 className="text-white text-xl md:text-2xl font-bold mb-2 tracking-wide">
+        <h3 className="text-white text-2xl md:text-3xl font-bold mb-3 tracking-wide">
           {subservice.title}
         </h3>
-        <p className="text-white/90 text-sm leading-relaxed font-light line-clamp-2">
+        <p className="text-white/90 text-sm md:text-base leading-relaxed font-light line-clamp-3">
           {subservice.description}
         </p>
       </div>
+
+      {/* Accent Bottom Strip */}
+      <div 
+        className="absolute bottom-0 left-0 w-full h-3 bg-[#005f5f]"
+      />
     </div>
   );
 };
@@ -101,7 +105,6 @@ const NotFound: React.FC = () => (
 export const ServicePage: React.FC = () => {
   const { serviceSlug } = useParams<{ serviceSlug: string }>();
   const navigate = useNavigate();
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   const [service, setService] = useState<Service | null>(null);
   const [subservices, setSubservices] = useState<Subservice[]>([]);
@@ -126,14 +129,6 @@ export const ServicePage: React.FC = () => {
     loadData();
     window.scrollTo(0, 0);
   }, [serviceSlug]);
-
-  const scrollLeft = () => {
-    scrollContainerRef.current?.scrollBy({ left: -500, behavior: 'smooth' });
-  };
-
-  const scrollRight = () => {
-    scrollContainerRef.current?.scrollBy({ left: 500, behavior: 'smooth' });
-  };
 
   const handleSubserviceClick = (subservice: Subservice) => {
     navigate(ROUTES.SUBSERVICE(subservice.slug));
@@ -194,35 +189,14 @@ export const ServicePage: React.FC = () => {
         className="w-full px-4 md:px-12 lg:px-16 pb-20"
         style={{ backgroundColor: accentColor }}
       >
-        <div className="flex justify-between items-end mb-6 pl-2">
+        <div className="flex justify-between items-end mb-8 pl-2">
           <h2 className="text-[#1A1A1A] text-3xl md:text-4xl font-bold tracking-tight">
             Solutions
           </h2>
-          
-          {/* Navigation Buttons for Slider */}
-          <div className="hidden md:flex gap-3">
-            <button 
-              onClick={scrollLeft}
-              className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
-              aria-label="Scroll left"
-            >
-              <ArrowLeft className="w-5 h-5" style={{ color: accentColor }} />
-            </button>
-            <button 
-              onClick={scrollRight}
-              className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
-              aria-label="Scroll right"
-            >
-              <ArrowRight className="w-5 h-5" style={{ color: accentColor }} />
-            </button>
-          </div>
         </div>
 
-        {/* Slider */}
-        <div 
-          ref={scrollContainerRef}
-          className="flex gap-6 md:gap-8 overflow-x-auto no-scrollbar pb-8 -mx-4 px-4 scroll-smooth"
-        >
+        {/* Grid Layout (same as HomePage Our Services) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
           {subservices.map((sub) => (
             <SubserviceCard 
               key={sub.id} 
@@ -230,8 +204,6 @@ export const ServicePage: React.FC = () => {
               onClick={() => handleSubserviceClick(sub)}
             />
           ))}
-          {/* Padding for scroll */}
-          <div className="w-8 flex-shrink-0" />
         </div>
 
         {/* Empty state */}
