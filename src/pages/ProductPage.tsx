@@ -347,7 +347,10 @@ export const ProductPage: React.FC = () => {
 
             {/* Action Buttons */}
             <div className="mt-12 flex flex-col gap-4">
-              <button className="w-full bg-[#005f5f] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#004d4d] transition-colors shadow-lg shadow-teal-900/10">
+              <button 
+                onClick={() => navigate(ROUTES.QUOTE)}
+                className="w-full bg-[#005f5f] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#004d4d] transition-colors shadow-lg shadow-teal-900/10"
+              >
                 Request Quote
               </button>
               <button className="w-full bg-transparent border border-[#005f5f] text-[#005f5f] py-4 rounded-xl font-bold text-lg hover:bg-[#005f5f]/5 transition-colors">
