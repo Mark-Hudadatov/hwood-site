@@ -175,63 +175,71 @@ export const ProductPage: React.FC = () => {
               <p className="text-xl text-gray-500 mb-8">{product.subtitle}</p>
             )}
 
-            {/* Product Visual / Main Image */}
-            <div className="w-full aspect-[4/3] bg-gray-50 rounded-3xl overflow-hidden relative group">
-              <img 
-                src={galleryImages[activeImageIndex]} 
-                alt={product.title}
-                className="w-full h-full object-cover mix-blend-multiply p-8 transition-transform duration-700 group-hover:scale-105"
-              />
-              
-              {/* 3D/Spin Indicator */}
-              {product.has3DView && (
-                <div className="absolute bottom-6 left-6 flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm text-sm font-medium text-gray-700">
-                  <Rotate3d className="w-4 h-4 text-[#005f5f]" />
-                  <span>360° View</span>
-                </div>
-              )}
-            </div>
-
-            {/* Product Video */}
-            {product.videoUrl && (
-              <div className="mt-6">
-                <h3 className="text-lg font-bold text-[#1A1A1A] mb-4">360° Product View</h3>
-                <div className="w-full aspect-video bg-gray-100 rounded-2xl overflow-hidden">
-                  <video 
-                    src={product.videoUrl}
-                    controls
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-contain"
-                  >
-                    Your browser does not support video playback.
-                  </video>
-                </div>
+            {/* Product Visual - Video or Image */}
+            {product.videoUrl ? (
+              /* Video Only (autoplay, no image) */
+              <div className="w-full aspect-[4/3] bg-gray-50 rounded-3xl overflow-hidden relative">
+                <video 
+                  src={product.videoUrl}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-contain"
+                >
+                  Your browser does not support video playback.
+                </video>
+                
+                {/* 3D/Spin Indicator */}
+                {product.has3DView && (
+                  <div className="absolute bottom-6 left-6 flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm text-sm font-medium text-gray-700">
+                    <Rotate3d className="w-4 h-4 text-[#005f5f]" />
+                    <span>360° View</span>
+                  </div>
+                )}
               </div>
-            )}
+            ) : (
+              /* Image Only (when no video) */
+              <>
+                <div className="w-full aspect-[4/3] bg-gray-50 rounded-3xl overflow-hidden relative group">
+                  <img 
+                    src={galleryImages[activeImageIndex]} 
+                    alt={product.title}
+                    className="w-full h-full object-cover mix-blend-multiply p-8 transition-transform duration-700 group-hover:scale-105"
+                  />
+                  
+                  {/* 3D/Spin Indicator */}
+                  {product.has3DView && (
+                    <div className="absolute bottom-6 left-6 flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm text-sm font-medium text-gray-700">
+                      <Rotate3d className="w-4 h-4 text-[#005f5f]" />
+                      <span>360° View</span>
+                    </div>
+                  )}
+                </div>
 
-            {/* Thumbnails */}
-            {galleryImages.length > 1 && (
-              <div className="flex gap-4 mt-6 overflow-x-auto no-scrollbar py-2">
-                {galleryImages.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveImageIndex(i)}
-                    className={`w-24 h-24 rounded-xl border-2 flex-shrink-0 cursor-pointer overflow-hidden transition-all ${
-                      i === activeImageIndex 
-                        ? 'border-[#005f5f]' 
-                        : 'border-transparent bg-gray-50 hover:border-gray-200'
-                    }`}
-                  >
-                    <img 
-                      src={img}
-                      alt={`${product.title} view ${i + 1}`}
-                      className="w-full h-full object-cover mix-blend-multiply p-2"
-                    />
-                  </button>
-                ))}
-              </div>
+                {/* Thumbnails (only for image products) */}
+                {galleryImages.length > 1 && (
+                  <div className="flex gap-4 mt-6 overflow-x-auto no-scrollbar py-2">
+                    {galleryImages.map((img, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setActiveImageIndex(i)}
+                        className={`w-24 h-24 rounded-xl border-2 flex-shrink-0 cursor-pointer overflow-hidden transition-all ${
+                          i === activeImageIndex 
+                            ? 'border-[#005f5f]' 
+                            : 'border-transparent bg-gray-50 hover:border-gray-200'
+                        }`}
+                      >
+                        <img 
+                          src={img}
+                          alt={`${product.title} view ${i + 1}`}
+                          className="w-full h-full object-cover mix-blend-multiply p-2"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
 
             {/* Features List */}
