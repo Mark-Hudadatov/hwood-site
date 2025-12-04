@@ -63,14 +63,12 @@ const Header: React.FC = () => {
           className="flex items-center gap-3 cursor-pointer" 
           onClick={() => navigate('/')}
         >
-          {/* Custom SVG Logo Mark */}
-          <div className="w-10 h-10 flex items-center justify-center text-[#005f5f]">
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-              <path d="M2 2h10l4 4-4 4H2V2z" />
-              <path d="M2 12h14l4 5-4 5H2V12z" />
-            </svg>
-          </div>
-          <span className="text-4xl font-normal tracking-tight text-black">HWOOD</span>
+          {/* Logo Image */}
+          <img 
+            src="/src/public/logo.png" 
+            alt="HWOOD Logo" 
+            className="h-12 w-auto"
+          />
         </div>
 
         {/* Center Links */}
@@ -124,11 +122,9 @@ const Header: React.FC = () => {
 
         {/* Right Icons */}
         <div className="flex items-center gap-4">
-          <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm">
-            <Link to="/contact"
+          <Link to="/contact" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm">
             <MapPin className="w-5 h-5" />
-            </Link>
-          </button>
+          </Link>
           <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm">
             <Search className="w-5 h-5" />
           </button>
@@ -152,13 +148,11 @@ const Footer: React.FC = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-8">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 flex items-center justify-center text-white">
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-              <path d="M2 2h10l4 4-4 4H2V2z" />
-              <path d="M2 12h14l4 5-4 5H2V12z" />
-            </svg>
-          </div>
-          <span className="text-3xl font-normal tracking-tight">HWOOD</span>
+          <img 
+            src="/src/public/logo.png" 
+            alt="HWOOD Logo" 
+            className="h-10 w-auto brightness-0 invert"
+          />
         </div>
 
         {/* Social Icons */}
