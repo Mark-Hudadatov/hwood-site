@@ -35,8 +35,8 @@ export const SERVICES: Service[] = [
     slug: 'cnc-board-processing',
     title: 'CNC Board Processing',
     description: 'Advanced CNC infrastructure for complex shapes, drilling, milling, and high-volume production with consistent accuracy.',
-    imageUrl: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=800',
-    heroImageUrl: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=2000',
+    imageUrl: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=800',
+    heroImageUrl: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=2000',
     accentColor: '#2D5A5A',
   },
   {
@@ -44,8 +44,8 @@ export const SERVICES: Service[] = [
     slug: 'furniture-fronts-production',
     title: 'Furniture Fronts Production',
     description: 'High-quality MDF, PVC, veneer, and HPL fronts for kitchens, wardrobes, storage furniture, and architectural applications.',
-    imageUrl: 'https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?auto=format&fit=crop&q=80&w=800',
-    heroImageUrl: 'https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?auto=format&fit=crop&q=80&w=2000',
+    imageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800',
+    heroImageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000',
     accentColor: '#8B4513',
   },
 ];
@@ -71,7 +71,7 @@ export const SUBSERVICES: Subservice[] = [
     serviceId: 'svc-1',
     title: 'Bathroom & Niche Modules',
     description: 'Specialized solutions for bathroom furniture and built-in niche systems.',
-    imageUrl: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=800',
   },
   {
     id: 'sub-3',
@@ -87,7 +87,7 @@ export const SUBSERVICES: Subservice[] = [
     serviceId: 'svc-1',
     title: 'Drawer & Storage Units',
     description: 'Precision-built drawer boxes and pull-out storage solutions.',
-    imageUrl: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&q=80&w=800',
   },
 
   // --- CNC Board Processing (svc-2) ---
@@ -97,7 +97,7 @@ export const SUBSERVICES: Subservice[] = [
     serviceId: 'svc-2',
     title: 'Front Milling',
     description: 'High-precision CNC milling for furniture fronts and decorative panels.',
-    imageUrl: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=800',
   },
   {
     id: 'sub-6',
@@ -105,7 +105,7 @@ export const SUBSERVICES: Subservice[] = [
     serviceId: 'svc-2',
     title: 'Drilling & Boring',
     description: 'Accurate drilling and boring operations for hardware, dowels, and fittings.',
-    imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=800',
   },
   {
     id: 'sub-7',
@@ -113,7 +113,7 @@ export const SUBSERVICES: Subservice[] = [
     serviceId: 'svc-2',
     title: 'Board Cutting',
     description: 'Precision cutting services for panels and boards of all sizes.',
-    imageUrl: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://images.unsplash.com/photo-1622021142947-da7dedc7c39a?auto=format&fit=crop&q=80&w=800',
   },
 
   // --- Furniture Fronts Production (svc-3) ---
@@ -123,7 +123,7 @@ export const SUBSERVICES: Subservice[] = [
     serviceId: 'svc-3',
     title: 'Painted MDF',
     description: 'Premium painted MDF fronts with smooth finishes and custom colors.',
-    imageUrl: 'https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800',
   },
   {
     id: 'sub-9',
@@ -131,7 +131,7 @@ export const SUBSERVICES: Subservice[] = [
     serviceId: 'svc-3',
     title: 'PVC / Thermofoil',
     description: 'Durable PVC and thermofoil wrapped fronts for moisture-resistant applications.',
-    imageUrl: 'https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&q=80&w=800',
   },
   {
     id: 'sub-10',
@@ -139,7 +139,7 @@ export const SUBSERVICES: Subservice[] = [
     serviceId: 'svc-3',
     title: 'Veneer Fronts',
     description: 'Natural wood veneer fronts for premium furniture applications.',
-    imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&q=80&w=800',
   },
   {
     id: 'sub-11',
@@ -147,7 +147,7 @@ export const SUBSERVICES: Subservice[] = [
     serviceId: 'svc-3',
     title: 'HPL Laminate Fronts',
     description: 'High-pressure laminate fronts for commercial and high-traffic environments.',
-    imageUrl: 'https://images.unsplash.com/photo-1556909212-d5b604d0c90d?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800',
   },
 ];
 
@@ -354,6 +354,32 @@ export const PRODUCTS: Product[] = [
     ],
     has3DView: true,
   },
+  {
+    id: 'prod-10',
+    slug: 'b-80-d2-s1',
+    categoryId: 'cat-2',
+    title: 'B-80-D2-S1',
+    subtitle: 'Premium base cabinet with double drawers',
+    description: 'High-quality base cabinet featuring two spacious soft-close drawers. Engineered for maximum storage efficiency with premium hardware and durable construction. Ideal for modern kitchen layouts requiring accessible lower storage.',
+    imageUrl: 'https://drive.google.com/uc?export=view&id=1RFmKg286jezMZIsdIGA7ISRLvCFpKObU',
+    galleryImages: [
+      'https://drive.google.com/uc?export=view&id=1RFmKg286jezMZIsdIGA7ISRLvCFpKObU',
+    ],
+    features: [
+      'Double drawer configuration',
+      'Soft-close mechanism',
+      'Full extension slides',
+      '18mm moisture-resistant panels',
+      'Adjustable legs included'
+    ],
+    specifications: [
+      { label: 'Width', value: '800', unit: 'mm' },
+      { label: 'Height', value: '720', unit: 'mm' },
+      { label: 'Depth', value: '560', unit: 'mm' },
+      { label: 'Drawer Height', value: '140', unit: 'mm' },
+    ],
+    has3DView: true,
+  },
 
   // --- Kitchen Modules > Island Modules (cat-4) ---
   {
@@ -433,7 +459,7 @@ export const STORIES: Story[] = [
     title: 'New CNC Center Installation Complete',
     date: '01/15/2025',
     type: 'EVENTS',
-    imageUrl: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=800',
   },
   {
     id: 'story-2',
@@ -447,7 +473,7 @@ export const STORIES: Story[] = [
     title: 'HWOOD Expands Production Capacity',
     date: '12/20/2024',
     type: 'EVENTS',
-    imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=800',
   },
   {
     id: 'story-4',
@@ -461,7 +487,7 @@ export const STORIES: Story[] = [
     title: 'Quality Control: Our Process Explained',
     date: '11/28/2024',
     type: 'EVENTS',
-    imageUrl: 'https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800',
   },
 ];
 
@@ -491,7 +517,7 @@ export const HERO_SLIDES: HeroSlide[] = [
     id: 'slide-2',
     title: 'Advanced CNC Processing for Complex Designs',
     subtitle: 'Accurate cutting, drilling, milling, and shaping — from one-off parts to high-volume production.',
-    imageUrl: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=2000',
+    imageUrl: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=2000',
     ctaText: 'View CNC Services',
     ctaLink: '/services/cnc-board-processing',
   },
@@ -499,7 +525,7 @@ export const HERO_SLIDES: HeroSlide[] = [
     id: 'slide-3',
     title: 'Premium Furniture Fronts & Architectural Panels',
     subtitle: 'MDF, PVC, veneer, and HPL fronts produced with precision finishing and full quality control.',
-    imageUrl: 'https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?auto=format&fit=crop&q=80&w=2000',
+    imageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000',
     ctaText: 'See Front Options',
     ctaLink: '/services/furniture-fronts-production',
   },
@@ -513,7 +539,7 @@ export const COMPANY_INFO = {
   name: 'HWOOD',
   tagline: 'Industrial Carpentry & CNC Production',
   description: 'A modern production powerhouse delivering modular cabinet systems, CNC processing, and premium furniture fronts for residential and commercial projects.',
-  phone: '+972-XX-XXX-XXXX',
-  email: 'info@hwood.co.il',
-  address: 'Industrial Zone, Israel',
+  phone: '+972-54-922-2804',
+  email: 'office@skylum.co.il',
+  address: 'Ha Masger, 20, Netanya, Israel',
 };
