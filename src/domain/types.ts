@@ -69,6 +69,7 @@ export interface Product {
   description: string;
   imageUrl: string;
   galleryImages?: string[];        // Additional product images
+  videoUrl?: string;               // Product video (360° spin, etc.)
   features?: string[];             // Key features list
   specifications?: ProductSpecification[];
   has3DView?: boolean;             // Whether 360° view is available
