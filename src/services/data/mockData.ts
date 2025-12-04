@@ -361,9 +361,9 @@ export const PRODUCTS: Product[] = [
     title: 'B-80-D2-S1',
     subtitle: 'Premium base cabinet with double drawers',
     description: 'High-quality base cabinet featuring two spacious soft-close drawers. Engineered for maximum storage efficiency with premium hardware and durable construction. Ideal for modern kitchen layouts requiring accessible lower storage.',
-    imageUrl: '/B-80-D2-S1.jpg?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://drive.google.com/uc?export=view&id=1JHLgiVLcgSjKlOcAK3gZKOqLU-2eZeBj?auto=format&fit=crop&q=80&w=800',
     galleryImages: [
-      '/B-80-D2-S1.jpg?auto=format&fit=crop&q=80&w=800',
+      'https://drive.google.com/uc?export=view&id=1JHLgiVLcgSjKlOcAK3gZKOqLU-2eZeBj?auto=format&fit=crop&q=80&w=800',
     ],
     videoUrl: '/B-80-D2-S1.webm',
     features: [
