@@ -14,9 +14,9 @@
     "@supabase/supabase-js": "^2.47.0",
     "i18next": "^24.2.0",
     "i18next-browser-languagedetector": "^8.0.0",
-    "lucide-react": "^0.344.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "lucide-react": "^0.454.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-i18next": "^15.4.0",
     "react-router-dom": "^6.22.1"
   },
@@ -36,3 +36,20 @@
     "vite": "^5.1.4"
   }
 }
+```
+
+**Changes made:**
+- `lucide-react`: `^0.344.0` → `^0.454.0`
+- `react`: `^18.2.0` → `^18.3.1`
+- `react-dom`: `^18.2.0` → `^18.3.1`
+
+---
+
+**Also add this file to prevent future conflicts:**
+
+### New File: `.npmrc`
+
+**Path:** `.npmrc` (root of repo)
+**Action:** Create new file
+```
+legacy-peer-deps=true
