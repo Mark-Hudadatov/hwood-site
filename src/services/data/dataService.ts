@@ -1,9 +1,9 @@
 /**
- * DATA SERVICE - SUPABASE VERSION
- * ================================
+ * DATA SERVICE - SUPABASE + FALLBACK VERSION
+ * ==========================================
  * Fetches data from Supabase database.
+ * Falls back to mockData if Supabase is unavailable.
  * Supports bilingual content (EN/HE).
- * Only returns visible items for public site.
  */
 
 import { supabase, getLocalizedField } from '../supabase';
@@ -15,8 +15,23 @@ import {
   Story,
 } from '../../domain/types';
 
+// Fallback imports
+import {
+  SERVICES as MOCK_SERVICES,
+  SUBSERVICES as MOCK_SUBSERVICES,
+  PRODUCT_CATEGORIES as MOCK_CATEGORIES,
+  PRODUCTS as MOCK_PRODUCTS,
+  STORIES as MOCK_STORIES,
+  HERO_SLIDES as MOCK_HERO_SLIDES,
+  COMPANY_INFO as MOCK_COMPANY_INFO,
+  HeroSlide as MockHeroSlide,
+} from './mockData';
+
 // Current language - will be set by i18n
 let currentLang: 'en' | 'he' = 'en';
+
+// Flag to track if Supabase has data
+let useSupabase = true;
 
 export function setLanguage(lang: 'en' | 'he') {
   currentLang = lang;
@@ -98,39 +113,64 @@ function transformStory(row: Record<string, unknown>): Story {
 // =============================================================================
 
 export async function getServices(): Promise<Service[]> {
-  const { data, error } = await supabase
-    .from('services')
-    .select('*')
-    .order('sort_order', { ascending: true });
+  if (!useSupabase) return MOCK_SERVICES;
+  
+  try {
+    const { data, error } = await supabase
+      .from('services')
+      .select('*')
+      .order('sort_order', { ascending: true });
 
-  if (error) {
-    console.error('Error fetching services:', error);
-    return [];
+    if (error || !data || data.length === 0) {
+      console.log('Using mock data for services');
+      useSupabase = false;
+      return MOCK_SERVICES;
+    }
+
+    return data.map(transformService);
+  } catch (e) {
+    console.log('Supabase error, using mock data:', e);
+    useSupabase = false;
+    return MOCK_SERVICES;
   }
-
-  return (data || []).map(transformService);
 }
 
 export async function getServiceBySlug(slug: string): Promise<Service | undefined> {
-  const { data, error } = await supabase
-    .from('services')
-    .select('*')
-    .eq('slug', slug)
-    .single();
+  if (!useSupabase) return MOCK_SERVICES.find(s => s.slug === slug);
+  
+  try {
+    const { data, error } = await supabase
+      .from('services')
+      .select('*')
+      .eq('slug', slug)
+      .single();
 
-  if (error || !data) return undefined;
-  return transformService(data);
+    if (error || !data) {
+      return MOCK_SERVICES.find(s => s.slug === slug);
+    }
+    return transformService(data);
+  } catch {
+    return MOCK_SERVICES.find(s => s.slug === slug);
+  }
 }
 
 export async function getServiceById(id: string): Promise<Service | undefined> {
-  const { data, error } = await supabase
-    .from('services')
-    .select('*')
-    .eq('id', id)
-    .single();
+  if (!useSupabase) return MOCK_SERVICES.find(s => s.id === id);
+  
+  try {
+    const { data, error } = await supabase
+      .from('services')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  if (error || !data) return undefined;
-  return transformService(data);
+    if (error || !data) {
+      return MOCK_SERVICES.find(s => s.id === id);
+    }
+    return transformService(data);
+  } catch {
+    return MOCK_SERVICES.find(s => s.id === id);
+  }
 }
 
 // =============================================================================
@@ -138,28 +178,40 @@ export async function getServiceById(id: string): Promise<Service | undefined> {
 // =============================================================================
 
 export async function getSubservices(): Promise<Subservice[]> {
-  const { data, error } = await supabase
-    .from('subservices')
-    .select('*')
-    .order('sort_order', { ascending: true });
+  if (!useSupabase) return MOCK_SUBSERVICES;
+  
+  try {
+    const { data, error } = await supabase
+      .from('subservices')
+      .select('*')
+      .order('sort_order', { ascending: true });
 
-  if (error) {
-    console.error('Error fetching subservices:', error);
-    return [];
+    if (error || !data || data.length === 0) {
+      return MOCK_SUBSERVICES;
+    }
+    return data.map(transformSubservice);
+  } catch {
+    return MOCK_SUBSERVICES;
   }
-
-  return (data || []).map(transformSubservice);
 }
 
 export async function getSubservicesByServiceId(serviceId: string): Promise<Subservice[]> {
-  const { data, error } = await supabase
-    .from('subservices')
-    .select('*')
-    .eq('service_id', serviceId)
-    .order('sort_order', { ascending: true });
+  if (!useSupabase) return MOCK_SUBSERVICES.filter(sub => sub.serviceId === serviceId);
+  
+  try {
+    const { data, error } = await supabase
+      .from('subservices')
+      .select('*')
+      .eq('service_id', serviceId)
+      .order('sort_order', { ascending: true });
 
-  if (error) return [];
-  return (data || []).map(transformSubservice);
+    if (error || !data) {
+      return MOCK_SUBSERVICES.filter(sub => sub.serviceId === serviceId);
+    }
+    return data.map(transformSubservice);
+  } catch {
+    return MOCK_SUBSERVICES.filter(sub => sub.serviceId === serviceId);
+  }
 }
 
 export async function getSubservicesByServiceSlug(serviceSlug: string): Promise<Subservice[]> {
@@ -169,25 +221,41 @@ export async function getSubservicesByServiceSlug(serviceSlug: string): Promise<
 }
 
 export async function getSubserviceBySlug(slug: string): Promise<Subservice | undefined> {
-  const { data, error } = await supabase
-    .from('subservices')
-    .select('*')
-    .eq('slug', slug)
-    .single();
+  if (!useSupabase) return MOCK_SUBSERVICES.find(sub => sub.slug === slug);
+  
+  try {
+    const { data, error } = await supabase
+      .from('subservices')
+      .select('*')
+      .eq('slug', slug)
+      .single();
 
-  if (error || !data) return undefined;
-  return transformSubservice(data);
+    if (error || !data) {
+      return MOCK_SUBSERVICES.find(sub => sub.slug === slug);
+    }
+    return transformSubservice(data);
+  } catch {
+    return MOCK_SUBSERVICES.find(sub => sub.slug === slug);
+  }
 }
 
 export async function getSubserviceById(id: string): Promise<Subservice | undefined> {
-  const { data, error } = await supabase
-    .from('subservices')
-    .select('*')
-    .eq('id', id)
-    .single();
+  if (!useSupabase) return MOCK_SUBSERVICES.find(sub => sub.id === id);
+  
+  try {
+    const { data, error } = await supabase
+      .from('subservices')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  if (error || !data) return undefined;
-  return transformSubservice(data);
+    if (error || !data) {
+      return MOCK_SUBSERVICES.find(sub => sub.id === id);
+    }
+    return transformSubservice(data);
+  } catch {
+    return MOCK_SUBSERVICES.find(sub => sub.id === id);
+  }
 }
 
 export async function getSubserviceWithParent(slug: string): Promise<{
@@ -208,24 +276,48 @@ export async function getSubserviceWithParent(slug: string): Promise<{
 // =============================================================================
 
 export async function getProductCategories(): Promise<ProductCategory[]> {
-  const { data, error } = await supabase
-    .from('product_categories')
-    .select('*')
-    .order('sort_order', { ascending: true });
+  if (!useSupabase) return MOCK_CATEGORIES;
+  
+  try {
+    const { data, error } = await supabase
+      .from('product_categories')
+      .select('*')
+      .order('sort_order', { ascending: true });
 
-  if (error) return [];
-  return (data || []).map(transformCategory);
+    if (error || !data || data.length === 0) {
+      return MOCK_CATEGORIES;
+    }
+    return data.map(transformCategory);
+  } catch {
+    return MOCK_CATEGORIES;
+  }
 }
 
 export async function getCategoriesBySubserviceId(subserviceId: string): Promise<ProductCategory[]> {
-  const { data, error } = await supabase
-    .from('product_categories')
-    .select('*')
-    .eq('subservice_id', subserviceId)
-    .order('sort_order', { ascending: true });
+  if (!useSupabase) {
+    return MOCK_CATEGORIES
+      .filter(cat => cat.subserviceId === subserviceId)
+      .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  }
+  
+  try {
+    const { data, error } = await supabase
+      .from('product_categories')
+      .select('*')
+      .eq('subservice_id', subserviceId)
+      .order('sort_order', { ascending: true });
 
-  if (error) return [];
-  return (data || []).map(transformCategory);
+    if (error || !data) {
+      return MOCK_CATEGORIES
+        .filter(cat => cat.subserviceId === subserviceId)
+        .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+    }
+    return data.map(transformCategory);
+  } catch {
+    return MOCK_CATEGORIES
+      .filter(cat => cat.subserviceId === subserviceId)
+      .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  }
 }
 
 export async function getCategoriesBySubserviceSlug(subserviceSlug: string): Promise<ProductCategory[]> {
@@ -235,14 +327,41 @@ export async function getCategoriesBySubserviceSlug(subserviceSlug: string): Pro
 }
 
 export async function getCategoryBySlug(slug: string): Promise<ProductCategory | undefined> {
-  const { data, error } = await supabase
-    .from('product_categories')
-    .select('*')
-    .eq('slug', slug)
-    .single();
+  if (!useSupabase) return MOCK_CATEGORIES.find(cat => cat.slug === slug);
+  
+  try {
+    const { data, error } = await supabase
+      .from('product_categories')
+      .select('*')
+      .eq('slug', slug)
+      .single();
 
-  if (error || !data) return undefined;
-  return transformCategory(data);
+    if (error || !data) {
+      return MOCK_CATEGORIES.find(cat => cat.slug === slug);
+    }
+    return transformCategory(data);
+  } catch {
+    return MOCK_CATEGORIES.find(cat => cat.slug === slug);
+  }
+}
+
+export async function getCategoryById(id: string): Promise<ProductCategory | undefined> {
+  if (!useSupabase) return MOCK_CATEGORIES.find(cat => cat.id === id);
+  
+  try {
+    const { data, error } = await supabase
+      .from('product_categories')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error || !data) {
+      return MOCK_CATEGORIES.find(cat => cat.id === id);
+    }
+    return transformCategory(data);
+  } catch {
+    return MOCK_CATEGORIES.find(cat => cat.id === id);
+  }
 }
 
 // =============================================================================
@@ -250,24 +369,40 @@ export async function getCategoryBySlug(slug: string): Promise<ProductCategory |
 // =============================================================================
 
 export async function getProducts(): Promise<Product[]> {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .order('sort_order', { ascending: true });
+  if (!useSupabase) return MOCK_PRODUCTS;
+  
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .order('sort_order', { ascending: true });
 
-  if (error) return [];
-  return (data || []).map(transformProduct);
+    if (error || !data || data.length === 0) {
+      return MOCK_PRODUCTS;
+    }
+    return data.map(transformProduct);
+  } catch {
+    return MOCK_PRODUCTS;
+  }
 }
 
 export async function getProductsByCategoryId(categoryId: string): Promise<Product[]> {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .eq('category_id', categoryId)
-    .order('sort_order', { ascending: true });
+  if (!useSupabase) return MOCK_PRODUCTS.filter(p => p.categoryId === categoryId);
+  
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('category_id', categoryId)
+      .order('sort_order', { ascending: true });
 
-  if (error) return [];
-  return (data || []).map(transformProduct);
+    if (error || !data) {
+      return MOCK_PRODUCTS.filter(p => p.categoryId === categoryId);
+    }
+    return data.map(transformProduct);
+  } catch {
+    return MOCK_PRODUCTS.filter(p => p.categoryId === categoryId);
+  }
 }
 
 export async function getProductsByCategorySlug(categorySlug: string): Promise<Product[]> {
@@ -280,37 +415,64 @@ export async function getProductsBySubserviceSlug(subserviceSlug: string): Promi
   const categories = await getCategoriesBySubserviceSlug(subserviceSlug);
   if (categories.length === 0) return [];
 
-  const categoryIds = categories.map(c => c.id);
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .in('category_id', categoryIds)
-    .order('sort_order', { ascending: true });
+  if (!useSupabase) {
+    const categoryIds = categories.map(c => c.id);
+    return MOCK_PRODUCTS.filter(p => categoryIds.includes(p.categoryId));
+  }
 
-  if (error) return [];
-  return (data || []).map(transformProduct);
+  const categoryIds = categories.map(c => c.id);
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .in('category_id', categoryIds)
+      .order('sort_order', { ascending: true });
+
+    if (error || !data) {
+      return MOCK_PRODUCTS.filter(p => categoryIds.includes(p.categoryId));
+    }
+    return data.map(transformProduct);
+  } catch {
+    return MOCK_PRODUCTS.filter(p => categoryIds.includes(p.categoryId));
+  }
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | undefined> {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .eq('slug', slug)
-    .single();
+  if (!useSupabase) return MOCK_PRODUCTS.find(p => p.slug === slug);
+  
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('slug', slug)
+      .single();
 
-  if (error || !data) return undefined;
-  return transformProduct(data);
+    if (error || !data) {
+      return MOCK_PRODUCTS.find(p => p.slug === slug);
+    }
+    return transformProduct(data);
+  } catch {
+    return MOCK_PRODUCTS.find(p => p.slug === slug);
+  }
 }
 
 export async function getProductById(id: string): Promise<Product | undefined> {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .eq('id', id)
-    .single();
+  if (!useSupabase) return MOCK_PRODUCTS.find(p => p.id === id);
+  
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  if (error || !data) return undefined;
-  return transformProduct(data);
+    if (error || !data) {
+      return MOCK_PRODUCTS.find(p => p.id === id);
+    }
+    return transformProduct(data);
+  } catch {
+    return MOCK_PRODUCTS.find(p => p.id === id);
+  }
 }
 
 export async function getProductWithBreadcrumb(slug: string): Promise<{
@@ -322,20 +484,10 @@ export async function getProductWithBreadcrumb(slug: string): Promise<{
   const product = await getProductBySlug(slug);
   if (!product) return undefined;
 
-  const category = await getCategoryBySlug(
-    (await supabase.from('product_categories').select('slug').eq('id', product.categoryId).single()).data?.slug || ''
-  );
+  const category = await getCategoryById(product.categoryId);
   if (!category) return undefined;
 
-  const { data: catData } = await supabase
-    .from('product_categories')
-    .select('subservice_id')
-    .eq('id', product.categoryId)
-    .single();
-  
-  if (!catData) return undefined;
-
-  const subservice = await getSubserviceById(catData.subservice_id);
+  const subservice = await getSubserviceById(category.subserviceId);
   if (!subservice) return undefined;
 
   const service = await getServiceById(subservice.serviceId);
@@ -349,17 +501,25 @@ export async function getProductWithBreadcrumb(slug: string): Promise<{
 // =============================================================================
 
 export async function getStories(): Promise<Story[]> {
-  const { data, error } = await supabase
-    .from('stories')
-    .select('*')
-    .order('date', { ascending: false });
+  if (!useSupabase) return MOCK_STORIES;
+  
+  try {
+    const { data, error } = await supabase
+      .from('stories')
+      .select('*')
+      .order('date', { ascending: false });
 
-  if (error) return [];
-  return (data || []).map(transformStory);
+    if (error || !data || data.length === 0) {
+      return MOCK_STORIES;
+    }
+    return data.map(transformStory);
+  } catch {
+    return MOCK_STORIES;
+  }
 }
 
 export async function addStory(story: Story): Promise<Story> {
-  return story; // Placeholder - admin handles this
+  return story;
 }
 
 // =============================================================================
@@ -376,21 +536,29 @@ export interface HeroSlide {
 }
 
 export async function getHeroSlides(): Promise<HeroSlide[]> {
-  const { data, error } = await supabase
-    .from('hero_slides')
-    .select('*')
-    .order('sort_order', { ascending: true });
-
-  if (error) return [];
+  if (!useSupabase) return MOCK_HERO_SLIDES;
   
-  return (data || []).map(row => ({
-    id: String(row.id),
-    title: getLocalizedField(row, 'title', currentLang),
-    subtitle: getLocalizedField(row, 'subtitle', currentLang),
-    imageUrl: String(row.image_url || ''),
-    ctaText: getLocalizedField(row, 'cta_text', currentLang) || undefined,
-    ctaLink: row.cta_link ? String(row.cta_link) : undefined,
-  }));
+  try {
+    const { data, error } = await supabase
+      .from('hero_slides')
+      .select('*')
+      .order('sort_order', { ascending: true });
+
+    if (error || !data || data.length === 0) {
+      return MOCK_HERO_SLIDES;
+    }
+    
+    return data.map(row => ({
+      id: String(row.id),
+      title: getLocalizedField(row, 'title', currentLang),
+      subtitle: getLocalizedField(row, 'subtitle', currentLang),
+      imageUrl: String(row.image_url || ''),
+      ctaText: getLocalizedField(row, 'cta_text', currentLang) || undefined,
+      ctaLink: row.cta_link ? String(row.cta_link) : undefined,
+    }));
+  } catch {
+    return MOCK_HERO_SLIDES;
+  }
 }
 
 // =============================================================================
@@ -406,32 +574,37 @@ export interface CompanyInfo {
   address: string;
 }
 
-export async function getCompanyInfo(): Promise<CompanyInfo> {
-  const { data, error } = await supabase
-    .from('company_info')
-    .select('*')
-    .eq('id', 1)
-    .single();
+// Keep sync version for backward compatibility
+export function getCompanyInfo(): CompanyInfo {
+  return MOCK_COMPANY_INFO;
+}
 
-  if (error || !data) {
+// Async version that uses Supabase
+export async function getCompanyInfoAsync(): Promise<CompanyInfo> {
+  if (!useSupabase) return MOCK_COMPANY_INFO;
+  
+  try {
+    const { data, error } = await supabase
+      .from('company_info')
+      .select('*')
+      .eq('id', 1)
+      .single();
+
+    if (error || !data) {
+      return MOCK_COMPANY_INFO;
+    }
+
     return {
-      name: 'HWOOD',
-      tagline: '',
-      description: '',
-      phone: '',
-      email: '',
-      address: '',
+      name: getLocalizedField(data, 'name', currentLang) || MOCK_COMPANY_INFO.name,
+      tagline: getLocalizedField(data, 'tagline', currentLang) || MOCK_COMPANY_INFO.tagline,
+      description: getLocalizedField(data, 'description', currentLang) || MOCK_COMPANY_INFO.description,
+      phone: String(data.phone || MOCK_COMPANY_INFO.phone),
+      email: String(data.email || MOCK_COMPANY_INFO.email),
+      address: getLocalizedField(data, 'address', currentLang) || MOCK_COMPANY_INFO.address,
     };
+  } catch {
+    return MOCK_COMPANY_INFO;
   }
-
-  return {
-    name: getLocalizedField(data, 'name', currentLang),
-    tagline: getLocalizedField(data, 'tagline', currentLang),
-    description: getLocalizedField(data, 'description', currentLang),
-    phone: String(data.phone || ''),
-    email: String(data.email || ''),
-    address: getLocalizedField(data, 'address', currentLang),
-  };
 }
 
 // =============================================================================
@@ -439,14 +612,36 @@ export async function getCompanyInfo(): Promise<CompanyInfo> {
 // =============================================================================
 
 export async function searchProducts(query: string): Promise<Product[]> {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .or(`title_en.ilike.%${query}%,title_he.ilike.%${query}%,description_en.ilike.%${query}%`)
-    .order('sort_order', { ascending: true });
+  const lowerQuery = query.toLowerCase();
+  
+  if (!useSupabase) {
+    return MOCK_PRODUCTS.filter(p => 
+      p.title.toLowerCase().includes(lowerQuery) ||
+      p.description.toLowerCase().includes(lowerQuery) ||
+      p.subtitle?.toLowerCase().includes(lowerQuery)
+    );
+  }
+  
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .or(`title_en.ilike.%${query}%,title_he.ilike.%${query}%,description_en.ilike.%${query}%`)
+      .order('sort_order', { ascending: true });
 
-  if (error) return [];
-  return (data || []).map(transformProduct);
+    if (error || !data) {
+      return MOCK_PRODUCTS.filter(p => 
+        p.title.toLowerCase().includes(lowerQuery) ||
+        p.description.toLowerCase().includes(lowerQuery)
+      );
+    }
+    return data.map(transformProduct);
+  } catch {
+    return MOCK_PRODUCTS.filter(p => 
+      p.title.toLowerCase().includes(lowerQuery) ||
+      p.description.toLowerCase().includes(lowerQuery)
+    );
+  }
 }
 
 export async function getHomepageData(): Promise<{
