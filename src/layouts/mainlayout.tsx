@@ -7,9 +7,41 @@
 
 import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, Link } from 'react-router-dom';
-import { MapPin, Search, User, ChevronDown, Globe, Facebook, Instagram, Linkedin, Youtube, MessageCircle, Menu, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { MapPin, Search, User, ChevronDown, Globe, Facebook, Instagram, Linkedin, Youtube, MessageCircle } from 'lucide-react';
 import { Service, Subservice } from '../domain/types';
 import { getNavigationData, getCompanyInfo } from '../services/data/dataService';
+
+// =============================================================================
+// LANGUAGE SWITCHER COMPONENT
+// =============================================================================
+
+const LanguageSwitcher: React.FC<{ variant?: 'light' | 'dark' }> = ({ variant = 'dark' }) => {
+  const { i18n } = useTranslation();
+  
+  const currentLang = i18n.language === 'he' ? 'he' : 'en';
+  
+  const toggleLanguage = () => {
+    const newLang = currentLang === 'en' ? 'he' : 'en';
+    i18n.changeLanguage(newLang);
+  };
+  
+  const baseClasses = "flex items-center gap-1 border rounded-full px-3 py-1 transition-all font-bold text-[11px]";
+  const variantClasses = variant === 'light' 
+    ? "border-white/50 text-white hover:bg-white/20" 
+    : "border-gray-400 text-gray-800 hover:bg-white hover:border-transparent";
+  
+  return (
+    <button 
+      onClick={toggleLanguage}
+      className={`${baseClasses} ${variantClasses}`}
+      aria-label="Switch language"
+    >
+      <Globe className="w-3 h-3" />
+      <span>{currentLang === 'en' ? 'עברית' : 'English'}</span>
+    </button>
+  );
+};
 
 // =============================================================================
 // HEADER COMPONENT
@@ -17,6 +49,7 @@ import { getNavigationData, getCompanyInfo } from '../services/data/dataService'
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [navData, setNavData] = useState<{ services: (Service & { subservices: Subservice[] })[] }>({ services: [] });
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -46,14 +79,11 @@ const Header: React.FC = () => {
     <header className="flex flex-col w-full bg-[#EAEAEA] relative z-20 shadow-sm font-sans">
       {/* Top Utility Bar */}
       <div className="hidden md:flex justify-end items-center px-8 md:px-12 py-2 gap-6 text-[11px] font-bold text-gray-800 tracking-wide">
-        <Link to="/about" className="hover:text-teal-700 transition-colors">Company</Link>
+        <Link to="/about" className="hover:text-teal-700 transition-colors">{t('nav.company')}</Link>
         <Link to="/portfolio" className="hover:text-teal-700 transition-colors">News</Link>
-        <Link to="/contact" className="hover:text-teal-700 transition-colors">Contacts</Link>
+        <Link to="/contact" className="hover:text-teal-700 transition-colors">{t('contact')}</Link>
         
-        <button className="flex items-center gap-1 border border-gray-400 rounded-full px-3 py-1 hover:bg-white hover:border-transparent transition-all">
-          <Globe className="w-3 h-3" />
-          <span>HEB</span>
-        </button>
+        <LanguageSwitcher variant="dark" />
       </div>
 
       {/* Main Navbar */}
@@ -111,7 +141,7 @@ const Header: React.FC = () => {
                       onClick={() => handleServiceClick(service.slug)}
                       className="text-sm font-semibold text-[#005f5f] hover:underline"
                     >
-                      View all {service.title} →
+                      {t('viewAll')} {service.title} →
                     </button>
                   </div>
                 </div>
@@ -131,6 +161,11 @@ const Header: React.FC = () => {
           <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black hover:bg-gray-100 transition-colors shadow-sm">
             <User className="w-5 h-5" />
           </button>
+          
+          {/* Mobile Language Switcher */}
+          <div className="lg:hidden">
+            <LanguageSwitcher variant="dark" />
+          </div>
         </div>
       </nav>
     </header>
@@ -142,6 +177,8 @@ const Header: React.FC = () => {
 // =============================================================================
 
 const Footer: React.FC = () => {
+  const { t } = useTranslation();
+  
   return (
     <footer className="w-full px-8 md:px-12 lg:px-16 pt-16 pb-8 text-white relative z-10">
       {/* Top Row: Logo & Socials */}
@@ -194,13 +231,12 @@ const Footer: React.FC = () => {
 
       {/* Bottom Row: Copyright & Links */}
       <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between gap-4 text-[11px] text-gray-400 tracking-wide">
-        <p>Copyright HWOOD | Israel, Netanya </p>
+        <p>Copyright HWOOD | Israel, Netanya | {t('footer.rights')}</p>
         
         <div className="flex flex-wrap gap-6">
-          <a href="#" className="hover:text-white transition-colors">Privacy center</a>
+          <a href="#" className="hover:text-white transition-colors">{t('footer.privacy')}</a>
           <a href="#" className="hover:text-white transition-colors">Privacy and cookie policy</a>
           <a href="#" className="hover:text-white transition-colors">List of cookies</a>
-          
         </div>
       </div>
     </footer>
@@ -213,9 +249,9 @@ const Footer: React.FC = () => {
 
 const SideMenu: React.FC = () => {
   return (
-    <div className="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3 pr-4">
+    <div className="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3 pr-4 rtl:right-auto rtl:left-0 rtl:pr-0 rtl:pl-4">
       <button 
-        className="w-14 h-14 bg-[#005f5f] rounded-l-2xl flex items-center justify-center shadow-lg hover:bg-[#004d4d] transition-colors"
+        className="w-14 h-14 bg-[#005f5f] rounded-l-2xl rtl:rounded-l-none rtl:rounded-r-2xl flex items-center justify-center shadow-lg hover:bg-[#004d4d] transition-colors"
         aria-label="Chat support"
       >
         <MessageCircle className="w-6 h-6 text-white" />
