@@ -36,20 +36,3 @@
     "vite": "^5.1.4"
   }
 }
-```
-
-**Changes made:**
-- `lucide-react`: `^0.344.0` → `^0.454.0`
-- `react`: `^18.2.0` → `^18.3.1`
-- `react-dom`: `^18.2.0` → `^18.3.1`
-
----
-
-**Also add this file to prevent future conflicts:**
-
-### New File: `.npmrc`
-
-**Path:** `.npmrc` (root of repo)
-**Action:** Create new file
-```
-legacy-peer-deps=true
