@@ -1,18 +1,12 @@
 /**
- * DATA SERVICE
- * =============
- * Async functions for accessing domain data.
- * 
- * Components should ALWAYS use this service instead of importing mockData directly.
- * This abstraction allows:
- * - Easy swap to real API later
- * - Simulated loading states
- * - Filtering/pagination logic
- * - Caching (future)
- * 
- * All functions return Promises to simulate async behavior.
+ * DATA SERVICE - SUPABASE VERSION
+ * ================================
+ * Fetches data from Supabase database.
+ * Supports bilingual content (EN/HE).
+ * Only returns visible items for public site.
  */
 
+import { supabase, getLocalizedField } from '../supabase';
 import {
   Service,
   Subservice,
@@ -21,110 +15,191 @@ import {
   Story,
 } from '../../domain/types';
 
-import {
-  SERVICES,
-  SUBSERVICES,
-  PRODUCT_CATEGORIES,
-  PRODUCTS,
-  STORIES,
-  HERO_SLIDES,
-  COMPANY_INFO,
-  HeroSlide,
-} from './mockData';
+// Current language - will be set by i18n
+let currentLang: 'en' | 'he' = 'en';
 
-// Simulate network delay (set to 0 for instant, or 100-300 for realistic feel)
-const SIMULATED_DELAY = 0;
+export function setLanguage(lang: 'en' | 'he') {
+  currentLang = lang;
+}
 
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+export function getLanguage(): 'en' | 'he' {
+  return currentLang;
+}
+
+// Transform database row to app format
+function transformService(row: Record<string, unknown>): Service {
+  return {
+    id: String(row.id),
+    slug: String(row.slug),
+    title: getLocalizedField(row, 'title', currentLang),
+    description: getLocalizedField(row, 'description', currentLang),
+    imageUrl: String(row.image_url || ''),
+    heroImageUrl: row.hero_image_url ? String(row.hero_image_url) : undefined,
+    accentColor: row.accent_color ? String(row.accent_color) : undefined,
+  };
+}
+
+function transformSubservice(row: Record<string, unknown>): Subservice {
+  return {
+    id: String(row.id),
+    slug: String(row.slug),
+    serviceId: String(row.service_id),
+    title: getLocalizedField(row, 'title', currentLang),
+    description: getLocalizedField(row, 'description', currentLang),
+    imageUrl: String(row.image_url || ''),
+    heroImageUrl: row.hero_image_url ? String(row.hero_image_url) : undefined,
+  };
+}
+
+function transformCategory(row: Record<string, unknown>): ProductCategory {
+  return {
+    id: String(row.id),
+    slug: String(row.slug),
+    subserviceId: String(row.subservice_id),
+    title: getLocalizedField(row, 'title', currentLang),
+    description: getLocalizedField(row, 'description', currentLang),
+    sortOrder: Number(row.sort_order) || 0,
+  };
+}
+
+function transformProduct(row: Record<string, unknown>): Product {
+  const featuresKey = currentLang === 'he' ? 'features_he' : 'features_en';
+  const features = Array.isArray(row[featuresKey]) ? row[featuresKey] : 
+                   Array.isArray(row.features_en) ? row.features_en : [];
+  
+  return {
+    id: String(row.id),
+    slug: String(row.slug),
+    categoryId: String(row.category_id),
+    title: getLocalizedField(row, 'title', currentLang),
+    subtitle: getLocalizedField(row, 'subtitle', currentLang) || undefined,
+    description: getLocalizedField(row, 'description', currentLang),
+    imageUrl: String(row.image_url || ''),
+    galleryImages: Array.isArray(row.gallery_images) ? row.gallery_images as string[] : [],
+    videoUrl: row.video_url ? String(row.video_url) : undefined,
+    features: features as string[],
+    specifications: Array.isArray(row.specifications) ? row.specifications as { label: string; value: string; unit?: string }[] : [],
+    has3DView: Boolean(row.has_3d_view),
+  };
+}
+
+function transformStory(row: Record<string, unknown>): Story {
+  return {
+    id: String(row.id),
+    title: getLocalizedField(row, 'title', currentLang),
+    date: String(row.date),
+    type: row.type as 'EVENTS' | 'CUSTOMER STORY',
+    imageUrl: String(row.image_url || ''),
+  };
+}
 
 // =============================================================================
 // SERVICES
 // =============================================================================
 
-/**
- * Get all services
- */
 export async function getServices(): Promise<Service[]> {
-  await delay(SIMULATED_DELAY);
-  return SERVICES;
+  const { data, error } = await supabase
+    .from('services')
+    .select('*')
+    .order('sort_order', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching services:', error);
+    return [];
+  }
+
+  return (data || []).map(transformService);
 }
 
-/**
- * Get a single service by slug
- */
 export async function getServiceBySlug(slug: string): Promise<Service | undefined> {
-  await delay(SIMULATED_DELAY);
-  return SERVICES.find(s => s.slug === slug);
+  const { data, error } = await supabase
+    .from('services')
+    .select('*')
+    .eq('slug', slug)
+    .single();
+
+  if (error || !data) return undefined;
+  return transformService(data);
 }
 
-/**
- * Get a single service by ID
- */
 export async function getServiceById(id: string): Promise<Service | undefined> {
-  await delay(SIMULATED_DELAY);
-  return SERVICES.find(s => s.id === id);
+  const { data, error } = await supabase
+    .from('services')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error || !data) return undefined;
+  return transformService(data);
 }
 
 // =============================================================================
 // SUBSERVICES
 // =============================================================================
 
-/**
- * Get all subservices
- */
 export async function getSubservices(): Promise<Subservice[]> {
-  await delay(SIMULATED_DELAY);
-  return SUBSERVICES;
+  const { data, error } = await supabase
+    .from('subservices')
+    .select('*')
+    .order('sort_order', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching subservices:', error);
+    return [];
+  }
+
+  return (data || []).map(transformSubservice);
 }
 
-/**
- * Get subservices for a specific service (by service ID)
- */
 export async function getSubservicesByServiceId(serviceId: string): Promise<Subservice[]> {
-  await delay(SIMULATED_DELAY);
-  return SUBSERVICES.filter(sub => sub.serviceId === serviceId);
+  const { data, error } = await supabase
+    .from('subservices')
+    .select('*')
+    .eq('service_id', serviceId)
+    .order('sort_order', { ascending: true });
+
+  if (error) return [];
+  return (data || []).map(transformSubservice);
 }
 
-/**
- * Get subservices for a specific service (by service slug)
- */
 export async function getSubservicesByServiceSlug(serviceSlug: string): Promise<Subservice[]> {
-  await delay(SIMULATED_DELAY);
-  const service = SERVICES.find(s => s.slug === serviceSlug);
+  const service = await getServiceBySlug(serviceSlug);
   if (!service) return [];
-  return SUBSERVICES.filter(sub => sub.serviceId === service.id);
+  return getSubservicesByServiceId(service.id);
 }
 
-/**
- * Get a single subservice by slug
- */
 export async function getSubserviceBySlug(slug: string): Promise<Subservice | undefined> {
-  await delay(SIMULATED_DELAY);
-  return SUBSERVICES.find(sub => sub.slug === slug);
+  const { data, error } = await supabase
+    .from('subservices')
+    .select('*')
+    .eq('slug', slug)
+    .single();
+
+  if (error || !data) return undefined;
+  return transformSubservice(data);
 }
 
-/**
- * Get a single subservice by ID
- */
 export async function getSubserviceById(id: string): Promise<Subservice | undefined> {
-  await delay(SIMULATED_DELAY);
-  return SUBSERVICES.find(sub => sub.id === id);
+  const { data, error } = await supabase
+    .from('subservices')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error || !data) return undefined;
+  return transformSubservice(data);
 }
 
-/**
- * Get subservice with its parent service data
- */
 export async function getSubserviceWithParent(slug: string): Promise<{
   subservice: Subservice;
   service: Service;
 } | undefined> {
-  await delay(SIMULATED_DELAY);
-  const subservice = SUBSERVICES.find(sub => sub.slug === slug);
+  const subservice = await getSubserviceBySlug(slug);
   if (!subservice) return undefined;
-  
-  const service = SERVICES.find(s => s.id === subservice.serviceId);
+
+  const service = await getServiceById(subservice.serviceId);
   if (!service) return undefined;
-  
+
   return { subservice, service };
 }
 
@@ -132,128 +207,140 @@ export async function getSubserviceWithParent(slug: string): Promise<{
 // PRODUCT CATEGORIES
 // =============================================================================
 
-/**
- * Get all product categories
- */
 export async function getProductCategories(): Promise<ProductCategory[]> {
-  await delay(SIMULATED_DELAY);
-  return PRODUCT_CATEGORIES;
+  const { data, error } = await supabase
+    .from('product_categories')
+    .select('*')
+    .order('sort_order', { ascending: true });
+
+  if (error) return [];
+  return (data || []).map(transformCategory);
 }
 
-/**
- * Get categories for a specific subservice (by subservice ID)
- */
 export async function getCategoriesBySubserviceId(subserviceId: string): Promise<ProductCategory[]> {
-  await delay(SIMULATED_DELAY);
-  return PRODUCT_CATEGORIES
-    .filter(cat => cat.subserviceId === subserviceId)
-    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  const { data, error } = await supabase
+    .from('product_categories')
+    .select('*')
+    .eq('subservice_id', subserviceId)
+    .order('sort_order', { ascending: true });
+
+  if (error) return [];
+  return (data || []).map(transformCategory);
 }
 
-/**
- * Get categories for a specific subservice (by subservice slug)
- */
 export async function getCategoriesBySubserviceSlug(subserviceSlug: string): Promise<ProductCategory[]> {
-  await delay(SIMULATED_DELAY);
-  const subservice = SUBSERVICES.find(sub => sub.slug === subserviceSlug);
+  const subservice = await getSubserviceBySlug(subserviceSlug);
   if (!subservice) return [];
-  return PRODUCT_CATEGORIES
-    .filter(cat => cat.subserviceId === subservice.id)
-    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  return getCategoriesBySubserviceId(subservice.id);
 }
 
-/**
- * Get a single category by slug
- */
 export async function getCategoryBySlug(slug: string): Promise<ProductCategory | undefined> {
-  await delay(SIMULATED_DELAY);
-  return PRODUCT_CATEGORIES.find(cat => cat.slug === slug);
+  const { data, error } = await supabase
+    .from('product_categories')
+    .select('*')
+    .eq('slug', slug)
+    .single();
+
+  if (error || !data) return undefined;
+  return transformCategory(data);
 }
 
 // =============================================================================
 // PRODUCTS
 // =============================================================================
 
-/**
- * Get all products
- */
 export async function getProducts(): Promise<Product[]> {
-  await delay(SIMULATED_DELAY);
-  return PRODUCTS;
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .order('sort_order', { ascending: true });
+
+  if (error) return [];
+  return (data || []).map(transformProduct);
 }
 
-/**
- * Get products for a specific category (by category ID)
- */
 export async function getProductsByCategoryId(categoryId: string): Promise<Product[]> {
-  await delay(SIMULATED_DELAY);
-  return PRODUCTS.filter(p => p.categoryId === categoryId);
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('category_id', categoryId)
+    .order('sort_order', { ascending: true });
+
+  if (error) return [];
+  return (data || []).map(transformProduct);
 }
 
-/**
- * Get products for a specific category (by category slug)
- */
 export async function getProductsByCategorySlug(categorySlug: string): Promise<Product[]> {
-  await delay(SIMULATED_DELAY);
-  const category = PRODUCT_CATEGORIES.find(cat => cat.slug === categorySlug);
+  const category = await getCategoryBySlug(categorySlug);
   if (!category) return [];
-  return PRODUCTS.filter(p => p.categoryId === category.id);
+  return getProductsByCategoryId(category.id);
 }
 
-/**
- * Get products for a specific subservice (all categories combined)
- */
 export async function getProductsBySubserviceSlug(subserviceSlug: string): Promise<Product[]> {
-  await delay(SIMULATED_DELAY);
-  const subservice = SUBSERVICES.find(sub => sub.slug === subserviceSlug);
-  if (!subservice) return [];
-  
-  const categoryIds = PRODUCT_CATEGORIES
-    .filter(cat => cat.subserviceId === subservice.id)
-    .map(cat => cat.id);
-  
-  return PRODUCTS.filter(p => categoryIds.includes(p.categoryId));
+  const categories = await getCategoriesBySubserviceSlug(subserviceSlug);
+  if (categories.length === 0) return [];
+
+  const categoryIds = categories.map(c => c.id);
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .in('category_id', categoryIds)
+    .order('sort_order', { ascending: true });
+
+  if (error) return [];
+  return (data || []).map(transformProduct);
 }
 
-/**
- * Get a single product by slug
- */
 export async function getProductBySlug(slug: string): Promise<Product | undefined> {
-  await delay(SIMULATED_DELAY);
-  return PRODUCTS.find(p => p.slug === slug);
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('slug', slug)
+    .single();
+
+  if (error || !data) return undefined;
+  return transformProduct(data);
 }
 
-/**
- * Get a single product by ID
- */
 export async function getProductById(id: string): Promise<Product | undefined> {
-  await delay(SIMULATED_DELAY);
-  return PRODUCTS.find(p => p.id === id);
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error || !data) return undefined;
+  return transformProduct(data);
 }
 
-/**
- * Get product with full breadcrumb chain
- */
 export async function getProductWithBreadcrumb(slug: string): Promise<{
   product: Product;
   category: ProductCategory;
   subservice: Subservice;
   service: Service;
 } | undefined> {
-  await delay(SIMULATED_DELAY);
-  
-  const product = PRODUCTS.find(p => p.slug === slug);
+  const product = await getProductBySlug(slug);
   if (!product) return undefined;
-  
-  const category = PRODUCT_CATEGORIES.find(cat => cat.id === product.categoryId);
+
+  const category = await getCategoryBySlug(
+    (await supabase.from('product_categories').select('slug').eq('id', product.categoryId).single()).data?.slug || ''
+  );
   if (!category) return undefined;
+
+  const { data: catData } = await supabase
+    .from('product_categories')
+    .select('subservice_id')
+    .eq('id', product.categoryId)
+    .single();
   
-  const subservice = SUBSERVICES.find(sub => sub.id === category.subserviceId);
+  if (!catData) return undefined;
+
+  const subservice = await getSubserviceById(catData.subservice_id);
   if (!subservice) return undefined;
-  
-  const service = SERVICES.find(s => s.id === subservice.serviceId);
+
+  const service = await getServiceById(subservice.serviceId);
   if (!service) return undefined;
-  
+
   return { product, category, subservice, service };
 }
 
@@ -261,121 +348,147 @@ export async function getProductWithBreadcrumb(slug: string): Promise<{
 // STORIES
 // =============================================================================
 
-/**
- * Get all stories
- */
 export async function getStories(): Promise<Story[]> {
-  await delay(SIMULATED_DELAY);
-  return STORIES;
+  const { data, error } = await supabase
+    .from('stories')
+    .select('*')
+    .order('date', { ascending: false });
+
+  if (error) return [];
+  return (data || []).map(transformStory);
 }
 
-/**
- * Add a new story (for AI-generated content)
- */
 export async function addStory(story: Story): Promise<Story> {
-  await delay(SIMULATED_DELAY);
-  // In mock mode, we just return the story as-is
-  // In real implementation, this would POST to an API
-  return story;
-}
-
-// =============================================================================
-// UTILITY FUNCTIONS
-// =============================================================================
-
-/**
- * Search across all products
- */
-export async function searchProducts(query: string): Promise<Product[]> {
-  await delay(SIMULATED_DELAY);
-  const lowerQuery = query.toLowerCase();
-  return PRODUCTS.filter(p => 
-    p.title.toLowerCase().includes(lowerQuery) ||
-    p.description.toLowerCase().includes(lowerQuery) ||
-    p.subtitle?.toLowerCase().includes(lowerQuery)
-  );
-}
-
-/**
- * Get homepage data bundle (optimized single call)
- */
-export async function getHomepageData(): Promise<{
-  services: Service[];
-  stories: Story[];
-}> {
-  await delay(SIMULATED_DELAY);
-  return {
-    services: SERVICES,
-    stories: STORIES,
-  };
-}
-
-/**
- * Get subservice page data bundle (optimized single call)
- */
-export async function getSubservicePageData(subserviceSlug: string): Promise<{
-  subservice: Subservice;
-  service: Service;
-  categories: ProductCategory[];
-  products: Product[];
-} | undefined> {
-  await delay(SIMULATED_DELAY);
-  
-  const subservice = SUBSERVICES.find(sub => sub.slug === subserviceSlug);
-  if (!subservice) return undefined;
-  
-  const service = SERVICES.find(s => s.id === subservice.serviceId);
-  if (!service) return undefined;
-  
-  const categories = PRODUCT_CATEGORIES
-    .filter(cat => cat.subserviceId === subservice.id)
-    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
-  
-  const categoryIds = categories.map(cat => cat.id);
-  const products = PRODUCTS.filter(p => categoryIds.includes(p.categoryId));
-  
-  return { subservice, service, categories, products };
+  return story; // Placeholder - admin handles this
 }
 
 // =============================================================================
 // HERO SLIDES
 // =============================================================================
 
-/**
- * Get all hero slides for homepage carousel
- */
+export interface HeroSlide {
+  id: string;
+  title: string;
+  subtitle: string;
+  imageUrl: string;
+  ctaText?: string;
+  ctaLink?: string;
+}
+
 export async function getHeroSlides(): Promise<HeroSlide[]> {
-  await delay(SIMULATED_DELAY);
-  return HERO_SLIDES;
+  const { data, error } = await supabase
+    .from('hero_slides')
+    .select('*')
+    .order('sort_order', { ascending: true });
+
+  if (error) return [];
+  
+  return (data || []).map(row => ({
+    id: String(row.id),
+    title: getLocalizedField(row, 'title', currentLang),
+    subtitle: getLocalizedField(row, 'subtitle', currentLang),
+    imageUrl: String(row.image_url || ''),
+    ctaText: getLocalizedField(row, 'cta_text', currentLang) || undefined,
+    ctaLink: row.cta_link ? String(row.cta_link) : undefined,
+  }));
 }
 
 // =============================================================================
 // COMPANY INFO
 // =============================================================================
 
-/**
- * Get company information
- */
-export function getCompanyInfo() {
-  return COMPANY_INFO;
+export interface CompanyInfo {
+  name: string;
+  tagline: string;
+  description: string;
+  phone: string;
+  email: string;
+  address: string;
+}
+
+export async function getCompanyInfo(): Promise<CompanyInfo> {
+  const { data, error } = await supabase
+    .from('company_info')
+    .select('*')
+    .eq('id', 1)
+    .single();
+
+  if (error || !data) {
+    return {
+      name: 'HWOOD',
+      tagline: '',
+      description: '',
+      phone: '',
+      email: '',
+      address: '',
+    };
+  }
+
+  return {
+    name: getLocalizedField(data, 'name', currentLang),
+    tagline: getLocalizedField(data, 'tagline', currentLang),
+    description: getLocalizedField(data, 'description', currentLang),
+    phone: String(data.phone || ''),
+    email: String(data.email || ''),
+    address: getLocalizedField(data, 'address', currentLang),
+  };
 }
 
 // =============================================================================
-// NAVIGATION DATA
+// UTILITY FUNCTIONS
 // =============================================================================
 
-/**
- * Get navigation menu data (services with their subservices)
- */
+export async function searchProducts(query: string): Promise<Product[]> {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .or(`title_en.ilike.%${query}%,title_he.ilike.%${query}%,description_en.ilike.%${query}%`)
+    .order('sort_order', { ascending: true });
+
+  if (error) return [];
+  return (data || []).map(transformProduct);
+}
+
+export async function getHomepageData(): Promise<{
+  services: Service[];
+  stories: Story[];
+}> {
+  const [services, stories] = await Promise.all([
+    getServices(),
+    getStories(),
+  ]);
+  return { services, stories };
+}
+
+export async function getSubservicePageData(subserviceSlug: string): Promise<{
+  subservice: Subservice;
+  service: Service;
+  categories: ProductCategory[];
+  products: Product[];
+} | undefined> {
+  const result = await getSubserviceWithParent(subserviceSlug);
+  if (!result) return undefined;
+
+  const categories = await getCategoriesBySubserviceId(result.subservice.id);
+  const products = await getProductsBySubserviceSlug(subserviceSlug);
+
+  return {
+    ...result,
+    categories,
+    products,
+  };
+}
+
 export async function getNavigationData(): Promise<{
   services: (Service & { subservices: Subservice[] })[];
 }> {
-  await delay(SIMULATED_DELAY);
-  
-  const servicesWithSubs = SERVICES.map(service => ({
+  const services = await getServices();
+  const subservices = await getSubservices();
+
+  const servicesWithSubs = services.map(service => ({
     ...service,
-    subservices: SUBSERVICES.filter(sub => sub.serviceId === service.id),
+    subservices: subservices.filter(sub => sub.serviceId === service.id),
   }));
-  
+
   return { services: servicesWithSubs };
 }
